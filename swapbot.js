@@ -56,7 +56,8 @@ const daiContract = new ethers.Contract(
 
     /***************************************************************************** */
 
-    const {buySwap, sellSwap} = require('./modules/swap');
+    const {buySwap} = require('./modules/buyswap');
+    const {sellSwap} = require('./modules/sellswap');
     
     const buyAndSell = async (buy) => {
         console.log("The fun of buying and selling: ", buy);
@@ -80,13 +81,13 @@ const daiContract = new ethers.Contract(
         console.log("Buy DAI with ETH");
             await buySwap( account, acct2);
         } else {
-    
-            await sellSwap(account, acct2);
+            console.log("Sell DAI for ETH");
+            await sellSwap(account, acct2, provider);
         }
 
     process.exit(0);
 
     }//end buyAndSell
 
-    const BUY_SELL = true; // True: Buy, False: Sell --- start with a buy then altermate
+    const BUY_SELL = false; // True: Buy, False: Sell --- start with a buy then altermate
     buyAndSell (BUY_SELL);

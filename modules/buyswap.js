@@ -12,10 +12,6 @@ const toRound = num => ( ethers.utils.toFixed(2));
 
 /********************************************************************* */
 
-const testSwap = async () => {
-    return ("just testing....")
-}
-
 const buySwap = async ( wallet, acct ) => {
     console.log("buySwap: ", acct);
 
@@ -128,10 +124,6 @@ let slippage = toBytes32("0.050");
     return true;
 }//end buySwap
 
-const sellSwap = async (amount, wallet) => {
-    console.log("sellSwap: ", amount);
-}
 
 module.exports.buySwap = buySwap;
-module.exports.sellSwap = sellSwap;
-module.exports.testSwap = testSwap;
+
