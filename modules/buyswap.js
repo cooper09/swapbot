@@ -85,7 +85,7 @@ let slippage = toBytes32("0.050");
         const path = [wethAddr, daiAddr]; //An array of token addresses
         const to = acct // should be a checksummed recipient address
         const deadline = Math.floor(Date.now() / 1000) + 60 * 20; // 20 minutes from the current Unix time
-        const value = trade.inputAmount.raw; // // needs to be converted to e.g. hex
+        const value = trade.inputAmount.raw*20; // // needs to be converted to e.g. hex
         const valueHex = await ethers.BigNumber.from(value.toString()).toHexString(); //convert to hex string
 
         const rawTxn = await router.populateTransaction.swapExactETHForTokens(
@@ -105,7 +105,7 @@ let slippage = toBytes32("0.050");
                 + "Transaction Hash:", (await sendTxn).hash
                 + '\n' + "Block Number: " 
                 + (await reciept).blockNumber + '\n' 
-                + "Navigate to whereever" 
+                + "Navigate to whereever: "  
                 + (await sendTxn).hash, "to see your transaction")
             } else {
                 console.log("Error submitting transaction")

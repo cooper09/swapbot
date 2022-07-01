@@ -19,6 +19,7 @@ const provider = new ethers.providers.JsonRpcProvider( rpcURL);
 const acct1 ="0x2fc8eB0aD0Ba242b5856fbdbF411237342A6756F"; //Primary Account 1 
 const acct2 = "0x4986828740bBDBC7CD6Ab10e0753d123f868dc40"; //local Receiver Account 1
 const privateKey = "a3994cf9f5df831441f98cbe07d1dbd4f2b1ac80518a1de7d66e6f7ef2a03a4a"// Primary Account 1
+//const privateKey = "efc31df5cce3adac2038c35dae71a28d8b74c75e3ad4e9a0b1602e7c4672ec1"; // Receiver acctount
 ;const signer = new ethers.Wallet(privateKey); //
 const account = signer.connect(provider);  //The signer is Primary Account 1
 
@@ -85,9 +86,32 @@ const daiContract = new ethers.Contract(
             await sellSwap(account, acct2, provider);
         }
 
-    process.exit(0);
+    //process.exit(0);
 
     }//end buyAndSell
 
-    const BUY_SELL = false; // True: Buy, False: Sell --- start with a buy then altermate
-    buyAndSell (BUY_SELL);
+    let count = 0;
+    const BUY_SELL = true;
+    //buyAndSell (BUY_SELL);
+
+    const init = async () =>{
+        return Math.random() < 0.5;
+    }
+
+    init()
+    .then( async (result) => {
+        setInterval ( async () => {
+            ++count;
+            const buy_or_sell = Math.random() < 0.5;
+            console.log("initial seed value: ", buy_or_sell )
+            const final = await buyAndSell(true)
+            console.log("Everything is A-OK: ", count );
+            const finalBal = await provider.getBalance(account.address);
+            console.log("acct: ",account.address," final balance: ", toEther(finalBal));
+            //process.exit(0);
+        }, 60000) //*/
+    })
+    .catch(err => {
+        console.log("Init - Error returned: ", err.message );
+        process.exit(1);
+    })

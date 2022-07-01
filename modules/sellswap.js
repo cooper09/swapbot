@@ -80,7 +80,7 @@ let slippage = toBytes32("0.050");
         const path = [daiAddr, wethAddr]; //An array of token addresses
         const to = acct // should be a checksummed recipient address
         const deadline = Math.floor(Date.now() / 1000) + 60 * 20; // 20 minutes from the current Unix time
-        const value = trade.inputAmount.raw; // // needs to be converted to e.g. hex
+        const value = trade.inputAmount.raw*10; // // needs to be converted to e.g. hex
         const valueHex = await ethers.BigNumber.from(value.toString()).toHexString(); //convert to hex string
 
         const amountInHex = ethers.BigNumber.from(amountIn.toString()).toHexString();
