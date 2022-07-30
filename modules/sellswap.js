@@ -15,6 +15,9 @@ const toRound = num => ( ethers.utils.toFixed(2));
 const wethAddr = "0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2"; //Mainnet
 const daiAddr = "0x6B175474E89094C44Da98b954EedeAC495271d0F"; //Mainnet
 
+   //Create UniswapV2 Router contract
+   let router = null;
+
 const sellSwap = async ( wallet, acct, provider ) => {
     console.log("sellSwap: ");
 
@@ -29,11 +32,11 @@ const sellSwap = async ( wallet, acct, provider ) => {
         wallet );
     
     //Create UniswapV2 Router contract
-        const router = new ethers.Contract( 
+        router = new ethers.Contract( 
             "0x7a250d5630B4cF539739dF2C5dAcb4c659F2488D",
             UniswapABI,
             wallet
-        );
+        ); 
 
         const chainId = 1;
 
@@ -67,11 +70,15 @@ let slippage = toBytes32("0.050");
         console.log("Amount (WETH) that goes in: ", toEther(amountIn) )
         const slippageTolerance = new Percent(slippage, "10000"); // 50 bips, or 0.50% - Slippage tolerance
     
+        console.log('')
         const trade = new Trade( //information necessary to create a swap transaction.
                 route,
                 new TokenAmount(weth, amountIn),
+                //new TokenAmount(dai, amountIn),
                 TradeType.EXACT_INPUT
         );
+        console.log('Trade object created...')
+
         /******************************************************************************************** */
 
         const amountOutMin = trade.minimumAmountOut(slippageTolerance).raw; // needs to be converted to e.g. hex
@@ -87,11 +94,33 @@ let slippage = toBytes32("0.050");
 
         const routerWithWallet = router.connect(wallet); 
 
+        console.log('create transaction: ', routerWithWallet );
+    
+        // approve sale???
+        //await approve(amountOutMinHex);
+        //await routerWithWallet.approve(acct, amountIn)
+        //.then ( () =>{
+        //    console.log("Dai Amount approved... " )
+        //})
+
+        const rawTxn = await router.populateTransaction.swapExactTokensForETH(
+            amountInHex,
+            amountOutMinHex,
+            path,
+            to,
+            Date.now()+1000*60*5,
+            {
+                gasLimit: 300000, //20e8,
+                gasPrice:  ethers.utils.parseUnits("5.0", "gwei"),//20e9,
+                value: valueHex
+            })
+/*pwd
+
         const rawTxn = await routerWithWallet.populateTransaction.swapExactTokensForETH(
                 amountInHex, 
                 amountOutMinHex , 
                 [daiAddr,wethAddr],
-                acct, //"0x4986828740bBDBC7CD6Ab10e0753d123f868dc40",
+                "0x4986828740bBDBC7CD6Ab10e0753d123f868dc40",
                 Date.now()+1000*60*5, 
                 {   
                     gasLimit: 200000, //20e8,
@@ -99,7 +128,10 @@ let slippage = toBytes32("0.050");
                     
                 })
 
-                let sendTxn = (await wallet).sendTransaction(rawTxn);
+    */
+            console.log('Send transaction...')
+                let sendTxn = (await wallet).
+                sendTransaction(rawTxn);
                 let reciept = (await sendTxn).wait();
                 //Logs the information about the transaction it has been mined.
                 if (reciept) {
@@ -112,7 +144,7 @@ let slippage = toBytes32("0.050");
                 } else {
                     console.log("Error submitting transaction")
                 }
-
+                console.log('All done!!!')
                 const ethBalAfter = await provider.getBalance(acct)
                 .then((bal) => {
                     console.log("Receiver ETH balance after trade: ", toEther(bal) )
@@ -124,5 +156,18 @@ let slippage = toBytes32("0.050");
     }
 
 }//end sellSwap
+
+
+    const approve = async () => {
+        const valueToapprove = ethers.utils.parseUnits('0.01', 'ether')
+        const tx = await WETH.approve(router.address, valueToapprove, {
+    //    gasPrice: provider.getGasPrice(),
+    //    gasLimit: 100000,
+        })
+        console.log('Approving...')
+    //    const receipt = await tx.wait()
+    //    console.log('Approve receipt')
+    //    console.log(receipt)
+    }
 
 module.exports.sellSwap = sellSwap;
