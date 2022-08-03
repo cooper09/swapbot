@@ -21,7 +21,7 @@ const acct1 = "0xb12A2AE1735Cc533837EB73D2747e4804471A0b0"; //Test Account addre
 const acct2 = "0x4986828740bBDBC7CD6Ab10e0753d123f868dc40"; //local Receiver Account 1
 const privateKey = "af11e0cdb8816e4e036731d9cf0b223a988068d671217244aef3bfe356a2779c"// Test Account 
 //const privateKey = "efc31df5cce3adac2038c35dae71a28d8b74c75e3ad4e9a0b1602e7c4672ec" // Receiver acctount
-;const signer = new ethers.Wallet(privateKey); //
+const signer = new ethers.Wallet(privateKey); //
 const account = signer.connect(provider);  //The signer is Test Account
 
 /********************************************************************* */
@@ -59,11 +59,11 @@ const daiContract = new ethers.Contract(
     /***************************************************************************** */
 
     const {buySwap} = require('./modules/buyswap');
-    const {sellSwap} = require('./modules/sellswap');
+    //const {sellSwap} = require('./modules/sellswap');
+    const {sellSwap} = require('./modules/testSell'); // test and breakdlown the buy into parts...
     
     const buyAndSell = async (buy) => {
         console.log("The fun of buying and selling: ", buy);
-
         const network =  await provider.detectNetwork()
         console.log("Runnig on network id: ", network.chainId, "", network.name );
     
@@ -101,16 +101,16 @@ const daiContract = new ethers.Contract(
 
     init()
     .then( async (result) => {
-    //    setInterval ( async () => {
+        setInterval ( async () => {
             ++count;
             const buy_or_sell = Math.random() < 0.5;
             console.log("initial seed value: ", buy_or_sell )
-            const final = await buyAndSell(true);
+            const final = await buyAndSell(false);   // true: buy, false: sell 
             console.log("Everything is A-OK: ", count );
             const finalBal = await provider.getBalance(account.address);
-            console.log("acct: ",account.address," final balance: ", toEther(finalBal));
-            process.exit(0);
-     //   }, 60000) //*/
+            //process.exit(0);
+        //}, 60000) //*/
+        }, 3000)
     })
     .catch(err => {
         console.log("Init - Error returned: ", err.message );

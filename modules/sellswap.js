@@ -14,6 +14,7 @@ const toRound = num => ( ethers.utils.toFixed(2));
 
 const wethAddr = "0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2"; //Mainnet
 const daiAddr = "0x6B175474E89094C44Da98b954EedeAC495271d0F"; //Mainnet
+const ethAddr = "exeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee";
 
    //Create UniswapV2 Router contract
    let router = null;
@@ -44,18 +45,20 @@ const dai = await Fetcher.fetchTokenData(chainId, daiAddr );
 const weth = WETH[chainId];
 const pair = await Fetcher.fetchPairData(dai,weth);
 const route = new Route([pair], weth );
-console.log("Buy WETH token with DAI: ", route.midPrice.toSignificant(6) );
-console.log("Buy DAI token with WETH: ", route.midPrice.invert().toSignificant(6) );
+console.log("Buy 1 WETH  token with ", route.midPrice.toSignificant(6), " DAI." );
+console.log("Buy 1 DAI token with ", route.midPrice.invert().toSignificant(6), " WETH." );
 
 let amountEthFromDAI = await router.getAmountsOut(
     toWei(route.midPrice.invert().toSignificant(6)),
-    [daiAddr, wethAddr]
+    //toWei("0.1"),
+    [wethAddr, daiAddr]
 )
 
 console.log("SELL - Amount of DAI from ETH: ", toEther(amountEthFromDAI[0]));
 console.log("BUY - Amount of ETH from DAI: ", toEther(amountEthFromDAI[1]));
 
-const amount = toEther(amountEthFromDAI[0]);
+const amount = toEther(amountEthFromDAI[1]);
+console.log("amount line:58: ", amount );
 let slippage = toBytes32("0.050");
 
     try {
@@ -80,9 +83,10 @@ let slippage = toBytes32("0.050");
         console.log('Trade object created...')
 
         /******************************************************************************************** */
-
         const amountOutMin = trade.minimumAmountOut(slippageTolerance).raw; // needs to be converted to e.g. hex
+        console.log("amountOutMin: ", amountOutMin.toString() );
         const amountOutMinHex = ethers.BigNumber.from(amountOutMin.toString()).toHexString();
+        console.log("amountOutMinHex: ", amountOutMinHex.toString() );
         //const path = [wethAddr, daiAddr]; //An array of token addresses
         const path = [daiAddr, wethAddr]; //An array of token addresses
         const to = acct // should be a checksummed recipient address
@@ -94,7 +98,7 @@ let slippage = toBytes32("0.050");
 
         const routerWithWallet = router.connect(wallet); 
 
-        console.log('create transaction: ', routerWithWallet );
+        console.log('create transaction - amountIn: ', amountIn , " amountOut: ", toEther(amountOutMinHex) );
     
         // approve sale???
         //await approve(amountOutMinHex);
@@ -103,7 +107,13 @@ let slippage = toBytes32("0.050");
         //    console.log("Dai Amount approved... " )
         //})
 
-        const rawTxn = await router.populateTransaction.swapExactTokensForETH(
+        daiContract.approve(router.address, amountInHex )
+            .then ( () =>{
+                console.log("Dai Amount approved... " )
+            })
+
+        //const rawTxn = await router.populateTransaction.swapExactTokensForETH(
+        const rawTxn = await router.populateTransaction.swapExactTokensForTokens(
             amountInHex,
             amountOutMinHex,
             path,
@@ -112,8 +122,10 @@ let slippage = toBytes32("0.050");
             {
                 gasLimit: 300000, //20e8,
                 gasPrice:  ethers.utils.parseUnits("5.0", "gwei"),//20e9,
-                value: valueHex
+                nonce: provider.getTransactionCount(acct, 'latest')
+                //nonce: ++nonce
             })
+            .then(console.log("Swap Dai for Eth..."));
 /*pwd
 
         const rawTxn = await routerWithWallet.populateTransaction.swapExactTokensForETH(
