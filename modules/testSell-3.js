@@ -78,7 +78,7 @@ const tx = {
     gasPrice,
     gasLimit: ethers.utils.hexlify(1000), //100 gwei
     nonce: provider.getTransactionCount(wallet.address, 'latest'),
-        gasLimit: 300000, //20e8,
+    gasLimit: 300000, //20e8,
     }//end  tx
 
 console.log*("send transaction...")
