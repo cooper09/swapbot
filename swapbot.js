@@ -68,7 +68,7 @@ const daiContract = new ethers.Contract(
         console.log("Runnig on network id: ", network.chainId, "", network.name );
     
         const balance = await provider.getBalance(account.address);
-        console.log("acct: ",account.address," balance: ", toEther(balance));
+        console.log("acct: ",account.address," start balance: ", toEther(balance));
 
         const contractDaiWallet = daiContract.connect(account);
         await contractDaiWallet.balanceOf(acct1)
@@ -101,16 +101,16 @@ const daiContract = new ethers.Contract(
 
     init()
     .then( async (result) => {
-    //    setInterval ( async () => {
+        setInterval ( async () => {
             ++count;
             const buy_or_sell = Math.random() < 0.5;
             console.log("initial seed value: ", buy_or_sell )
-            const final = await buyAndSell(false);   // true: buy, false: sell 
+            const final = await buyAndSell(buy_or_sell);   // true: buy, false: sell 
             console.log("Everything is A-OK: ", count );
             const finalBal = await provider.getBalance(account.address);
             console.log("send account ", account.address, " final balance: ", toEther(finalBal));
-            process.exit(0);
-        //}, 60000) //*/
+            //process.exit(0);
+        }, 60000) //*/
         //}, 3000)
     })
     .catch(err => {

@@ -115,7 +115,7 @@ let slippage = toBytes32("0.050");
             const contractDaiWallet = daiContract.connect(wallet);
             await contractDaiWallet.balanceOf(acct)
                 .then((bal) => {
-                    console.log(wallet.address, " curren Receiver DAI balance: ", toEther(bal) )
+                    console.log(wallet.address, " current Receiver DAI balance: ", toEther(bal) )
                 })
                 //check for transfer EVENT
   
