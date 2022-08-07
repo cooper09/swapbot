@@ -67,7 +67,8 @@ let slippage = toBytes32("0.050");
         .then((bal) => {
             console.log("Receiver ETH balance before trade: ", toEther(bal) )
         }) 
-        
+    //
+    // Set up the Uniswap DAi to Eth swap    
         let amountIn = ethers.utils.parseEther(amount.toString()); //helper function to convert ETH to Wei       
         amountIn = amountIn.toString()
         console.log("Amount (WETH) that goes in: ", toEther(amountIn) )

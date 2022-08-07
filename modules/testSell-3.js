@@ -52,6 +52,7 @@ const sellSwap = async ( wallet, acct, provider ) => {
     const dai = await Fetcher.fetchTokenData(chainId, daiAddr );
     const weth = WETH[chainId];
     const pair = await Fetcher.fetchPairData(dai,weth);
+    //const pair = await Fetcher.fetchPairData(weth,dai);
     const route = new Route([pair], weth );
     console.log("Buy 1 WETH  token with ", route.midPrice.toSignificant(6), " DAI." );
     console.log("Buy 1 DAI token with ", route.midPrice.invert().toSignificant(6), " WETH." );
@@ -61,9 +62,31 @@ let amountEthFromDAI = await router.getAmountsOut(
     [daiAddr, wethAddr]
 )
 
-const valueStr = toEther((amountEthFromDAI[1]).toString()); //10000 multiplier
+const valueStr = toEther((amountEthFromDAI[1]*100000).toString()); //10000 multiplier
 //const valueStr = toEther(route.midPrice.invert().toSignificant(6).toString());
 console.log("BUY - Amount out of ETH from DAI - string: ", valueStr );
+
+// What goes here...
+// Set up a trade...what is the difference between a trade and a transaction
+// Why am I doing a trade?
+
+let slippage = toBytes32("0.050");
+
+let amountIn = ethers.utils.parseEther(valueStr); //helper function to convert ETH to Wei       
+//amountIn = amountIn.toString()
+console.log("Amount (WETH) that goes in: ", toEther(amountIn) )
+const slippageTolerance = new Percent(slippage, "10000"); // 50 bips, or 0.50% - Slippage tolerance
+
+const trade = new Trade( //information necessary to create a swap transaction.
+    route,
+    new TokenAmount(weth, amountIn),
+    //new TokenAmount(dai, amountIn),
+    TradeType.EXACT_INPUT
+     );
+    console.log('Trade object created: ', trade )
+
+
+/*** pick up here when ready  ******
 
 //Set up sell transaction
 console.log("Set up transaction...")
@@ -81,7 +104,6 @@ const tx = {
     gasLimit: 300000, //20e8,
     }//end  tx
 
-console.log*("send transaction...")
 const transaction = await wallet.sendTransaction(tx)
 console.log("transaction: ", transaction.nonce)
 
@@ -89,7 +111,7 @@ const ethBalbalance = await provider.getBalance(acct)
 .then((bal) => {
     console.log("Receiver ETH balance after trade: ", toEther(bal) )
 }) 
-   
+   */
 }//end sellSwap
 
 module.exports.sellSwap = sellSwap;

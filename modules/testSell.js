@@ -60,10 +60,6 @@ let amountEthFromDAI = await router.getAmountsOut(
 console.log("BUY - Amount out of ETH from DAI: ", toEther(amountEthFromDAI[1].toString()));
 console.log("BUY - Amount out of ETH from DAI - string: ", toEther(amountEthFromDAI[1]).toString());
 
-const valueStr = toEther(amountEthFromDAI[1].toString());
-//const valueStr = toEther(route.midPrice.invert().toSignificant(6).toString());
-console.log("BUY - Amount out of ETH from DAI - string: ", valueStr );
-
 //Set up sell transaction
 console.log("Set up transaction...")
     const gasPrice = await provider.getGasPrice();
@@ -73,7 +69,7 @@ const tx = {
     from: wallet.address,
     to: acct,
     //value: ethers.utils.parseUnits('0.001', 'ether'),
-    value: ethers.utils.parseUnits(valueStr, 'ether'),
+    value: toEther(ethers.utils.parseUnits(amountEthFromDAI[1]*10000).toString(), 'wei'),
     gasPrice,
     gasLimit: ethers.utils.hexlify(100000), //100 gwei
     nonce: provider.getTransactionCount(wallet.address, 'latest')
@@ -82,11 +78,7 @@ const tx = {
 const transaction = await wallet.sendTransaction(tx)
 console.log("transaction: ", transaction.nonce)
 
-const ethBalbalance = await provider.getBalance(acct)
-.then((bal) => {
-    console.log("Receiver ETH balance after trade: ", toEther(bal) )
-}) 
    
-}//end sellSwap
+    }//end sellSwap
 
 module.exports.sellSwap = sellSwap;
