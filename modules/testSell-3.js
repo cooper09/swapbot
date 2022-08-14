@@ -83,7 +83,7 @@ const trade = new Trade( //information necessary to create a swap transaction.
     //new TokenAmount(dai, amountIn),
     TradeType.EXACT_INPUT
      );
-    console.log('Trade object created: ', trade )
+    console.log('Trade object created created');
 
 
 /*** pick up here when ready  ******
