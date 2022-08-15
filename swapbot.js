@@ -36,17 +36,22 @@ const { buyAndSell} = require('./modules/buyandsell');
 
     init()
     .then( async (result) => {
-        setInterval ( async () => {
-            ++count;
-            //const buy_or_sell = Math.random() < 0.5;
-            console.log("initial seed value: ", result )
-            const final = await buyAndSell(true);   // true: buy, false: sell 
-            console.log("Everything is A-OK: ", count );
-            const finalBal = await provider.getBalance(account.address);
-            console.log("send account ", account.address, " final balance: ", toEther(finalBal));
-            process.exit(0);
-        }, 3000)    // every 3 secs
-        //}, 60000) // every 5 minutesgit 
+            console.log("current count: ", count);
+            setInterval ( async () => {
+                if (count <= 1 ){
+                    ++count;
+                    console.log("initial seed value: ", result );
+                    const final = await buyAndSell(true);   // true: buy, false: sell 
+                    console.log("Everything is A-OK: ", count );
+                    const finalBal = await provider.getBalance(account.address);
+                    console.log("send account ", account.address, " final balance: ", toEther(finalBal));
+                } else {
+                    console.log("All done...")
+                    process.exit(0);
+                }//end iffy
+            }, 3000) //every 3 seconds
+            //}, 60000) //every 5 minuts*/
+            //}, 3.6e+6) //every hour (3600000)
 
     })
     .catch(err => {
