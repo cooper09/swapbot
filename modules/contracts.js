@@ -26,4 +26,6 @@ const daiContract = new ethers.Contract(
     module.exports.wethAddr = wethAddr;
     module.exports.daiArtifact = daiAddr;
     module.exports.daiContract = daiContract;
+    module.exports.daiAddr = daiAddr;
+    module.exports.wethAddr = wethAddr;
     module.exports.router = router;

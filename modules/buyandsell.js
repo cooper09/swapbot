@@ -3,8 +3,8 @@ const { toEther } = require('./utils');
 const { daiContract } = require('./contracts');
 
 const {buySwap} = require('./buyswap');
-//const {sellSwap} = require('./modules/sellswap');
-const {sellSwap} = require('./testSell-3'); // test and breakdlown the buy into parts...
+const {sellSwap} = require('./sellswap');
+//const {sellSwap} = require('./testSell-3'); // test and breakdlown the buy into parts...
 
 const buyAndSell = async (buy) => {
     console.log("The fun of buying and selling: ", buy);

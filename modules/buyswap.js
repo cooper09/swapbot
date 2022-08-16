@@ -51,16 +51,18 @@ const dai = await Fetcher.fetchTokenData(chainId, daiAddr );
 const weth = WETH[chainId];
 const pair = await Fetcher.fetchPairData(dai,weth);
 const route = new Route([pair], weth );
-console.log("Buy WETH token with DAI: ", route.midPrice.toSignificant(6) );
-console.log("Buy DAI token with WETH: ", route.midPrice.invert().toSignificant(6) );
+console.log("Buy 1 WETH with ", route.midPrice.toSignificant(6)," Dai" );
+console.log("Buy 1 DAI with ", route.midPrice.invert().toSignificant(6)," Eth" );
 
+console.log("The ammount of Dai we are selling: ", toWei(route.midPrice.invert().toSignificant(6)) )
 let amountEthFromDAI = await router.getAmountsOut(
-    toWei(route.midPrice.invert().toSignificant(6)),
-    [daiAddr, wethAddr]
-)
-
-console.log("SELL - Amount of DAI from ETH: ", toEther(amountEthFromDAI[0]));
-console.log("BUY - Amount of ETH from DAI: ", toEther(amountEthFromDAI[1]));
+        toWei(route.midPrice.invert().toSignificant(6)),
+        [daiAddr, wethAddr]
+    )
+    console.log("The ammount of Dai we are selling: ", toWei(route.midPrice.invert().toSignificant(6)) )
+    console.log("");
+console.log("Amount of Eth from Dai - DAI: ", toEther(amountEthFromDAI[0]));
+console.log("Amount of ETH from DAI - ETH: ", toEther(amountEthFromDAI[1]));
 
 const amount = toEther(amountEthFromDAI[0]);
 let slippage = toBytes32("0.050");

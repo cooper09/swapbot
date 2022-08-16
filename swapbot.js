@@ -37,11 +37,11 @@ const { buyAndSell} = require('./modules/buyandsell');
     init()
     .then( async (result) => {
             console.log("current count: ", count);
-            setInterval ( async () => {
+            //setInterval ( async () => {
                 if (count <= 1 ){
                     ++count;
                     console.log("initial seed value: ", result );
-                    const final = await buyAndSell(true);   // true: buy, false: sell 
+                    const final = await buyAndSell(false);   // true: buy, false: sell 
                     console.log("Everything is A-OK: ", count );
                     const finalBal = await provider.getBalance(account.address);
                     console.log("send account ", account.address, " final balance: ", toEther(finalBal));
@@ -49,7 +49,7 @@ const { buyAndSell} = require('./modules/buyandsell');
                     console.log("All done...")
                     process.exit(0);
                 }//end iffy
-            }, 3000) //every 3 seconds
+          //  }, 3000) //every 3 seconds
             //}, 60000) //every 5 minuts*/
             //}, 3.6e+6) //every hour (3600000)
 
