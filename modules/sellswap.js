@@ -50,7 +50,7 @@ let slippage = toBytes32("0.050");
 
 //let amountIn = ethers.utils.parseEther(amountDai.toString()); //helper function to convert ETH to Wei       
 //let amountIn = ethers.utils.parseEther(amountEth.toString());
-let amountIn = ethers.utils.parseEther(amountDai.toString());
+let amountIn = ethers.utils.parseEther(amountEth.toString());
 
 
 amountIn = amountIn.toString()
