@@ -22,15 +22,16 @@ const {wethArtifact, daiArtifact,daiContract,daiAddr, wethAddr, router } = requi
 const sellSwap = async ( wallet, acct, provider ) => {
     console.log("sellSwap: ");
 
+    console.log("current block: ",  await provider.getTransactionCount(wallet.address, 'latest'))
+    console.log("current gas limit: ",  await provider.getBlock(wallet.address, 'latest').gaslimit )
+    //console.log("current gas price: ",  await provider.getTransactionCount(wallet.address, 'latest'))
+
 const chainId = 1;
 
 const dai = await Fetcher.fetchTokenData(chainId, daiAddr );
 const weth = WETH[chainId];
 const pair = await Fetcher.fetchPairData(dai,weth);
-const route = new Route([pair], weth );
-console.log("Buy 1 WETH  token with ", route.midPrice.toSignificant(6), " DAI." );
-console.log("Buy 1 DAI token with ", route.midPrice.invert().toSignificant(6), " WETH." );
-
+const route = new Route([pair], dai );
 
 const daiBal = await daiContract.balanceOf(acct);
 
@@ -42,137 +43,119 @@ let amountEthFromDAI = await router.getAmountsOut(
     )
     console.log("The ammount of Dai we are selling: ", toEther(daiBal) )
 
-console.log("Amount of DAI from ETH: ", toEther(amountEthFromDAI[0]));
-console.log("Amount of ETH from DAI: ", toEther(amountEthFromDAI[1]));
-
 const amountDai =toEther(amountEthFromDAI[0]);
 const amountEth = toEther(amountEthFromDAI[1]);
 console.log("amount of Eth we should get back : ", amountEth, " for ", amountDai, " Dai" );
 let slippage = toBytes32("0.050");
 
-let amountIn = ethers.utils.parseEther(amountDai.toString()); //helper function to convert ETH to Wei       
+//let amountIn = ethers.utils.parseEther(amountDai.toString()); //helper function to convert ETH to Wei       
+//let amountIn = ethers.utils.parseEther(amountEth.toString());
+let amountIn = ethers.utils.parseEther(amountDai.toString());
+
+
 amountIn = amountIn.toString()
-console.log("Amount (WETH) that we should get back: ", toEther(amountIn) )
+console.log("Amount (WETH) that we should get back: ", amountIn );
+console.log("Amount (DAI) that we should put in: ", amountDai);
+console.log("Amount (WETH) that we should get back: ", amountEth);
+
 const slippageTolerance = new Percent(slippage, "10000"); // 50 bips, or 0.50% - Slippage tolerance
+console.log("Slippage calculated...");
 
     try {
-    // Set up the Uniswap DAi to Eth swap    
-        console.log('Ready to Trade...')
-
+        // set up our trade
+                
         const trade = new Trade( //information necessary to create a swap transaction.
-                route,
-                new TokenAmount(weth, amountIn),
-                TradeType.EXACT_INPUT
-        );
+            route,
+            new TokenAmount(dai, amountIn),
+            TradeType.EXACT_INPUT
+        ); //end trade
 
-        //console.log('Trade object created - amount in: ', trade.inputAmount.minimumAmountOut() );
-        //console.log('Trade object created - amount out: ', trade.outputAmount.currency.address )
+             /******************************************************************************************** */
+             //const amountOutMin = trade.minimumAmountOut(slippageTolerance).raw; // needs to be converted to e.g. hex
+             const amountOutMin = ethers.BigNumber.from(
+                trade.minimumAmountOut(slippageTolerance).raw.toString()
+              ).toHexString();
+            console.log("Minimum amount I will receive: ", amountOutMin );
 
-        /******************************************************************************************** */
-        const amountOutMin = trade.minimumAmountOut(slippageTolerance).raw; // needs to be converted to e.g. hex
-        //const amountOutMin = amount;
-        console.log("amountOutMin: ", amountOutMin.toString() );
-        const amountOutMinHex = ethers.BigNumber.from(amountOutMin.toString()).toHexString();
-        console.log("amountOutMinHex: ", amountOutMinHex.toString() );
-        //const path = [wethAddr, daiAddr]; //An array of token addresses
-        const path = [daiAddr, wethAddr]; //An array of token addresses
-        console.log("the beaten path: ", path );
+              const path = [daiAddr, wethAddr];
+              const to = acct;
+              const deadline = Math.floor(Date.now() / 1000) + 60 * 10;
 
-        const to = acct // should be a checksummed recipient address
-        const deadline = Math.floor(Date.now() / 1000) + 60 * 20; // 20 minutes from the current Unix time
-        const value = trade.inputAmount.raw*10; // // needs to be converted to e.g. hex
-        const valueHex = await ethers.BigNumber.from(value.toString()).toHexString(); //convert to hex string
-
-        
-        const sellTx = require("./sell-tx");
-
-        sellTx.sell_tx(amountIn);
-
-        /*
-        const amountInHex = ethers.BigNumber.from(amountIn.toString()).toHexString();
-
-        const routerWithWallet = router.connect(wallet); 
-
-        console.log('create transaction - amountIn: ', amountIn , " amountOut: ", toEther(amountOutMinHex) );
-             process.exit(0);
-        daiContract.approve(router.address, amountInHex )
-            .then ( () =>{
-                console.log("Dai Amount approved... " )
-            })
-
-            process.exit(0)
-
-        //const rawTxn = await router.populateTransaction.swapExactTokensForETH(
-        const rawTxn = await router.populateTransaction.swapExactTokensForTokens(
-            amountInHex,
-            amountOutMinHex,
-            path,
-            to,
-            Date.now()+1000*60*5,
-            {
-                gasLimit: 300000, //20e8,
-                gasPrice:  ethers.utils.parseUnits("5.0", "gwei"),//20e9,
-                nonce: provider.getTransactionCount(wallet.address, 'latest'),
-
-                //nonce: ++nonce
-            })
-            .then(console.log("Swap Dai for Eth..."));
-/*
-
-        const rawTxn = await routerWithWallet.populateTransaction.swapExactTokensForETH(
-                amountInHex, 
-                amountOutMinHex , 
-                [daiAddr,wethAddr],
-                "0x4986828740bBDBC7CD6Ab10e0753d123f868dc40",
-                Date.now()+1000*60*5, 
-                {   
-                    gasLimit: 200000, //20e8,
-                    gasPrice:  ethers.utils.parseUnits("5.0", "gwei"),//20e9,
-                    
-                })
-
- 
-            console.log('Send transaction...')
-                let sendTxn = (await wallet).
-                sendTransaction(rawTxn);
-                let reciept = (await sendTxn).wait();
-                //Logs the information about the transaction it has been mined.
-                if (reciept) {
-                    console.log(" - Transaction is mined - " + '\n' 
-                    + "Transaction Hash:", (await sendTxn).hash
-                    + '\n' + "Block Number: " 
-                    + (await reciept).blockNumber + '\n' 
-                    + "Navigate to whereever" 
-                    + (await sendTxn).hash, "to see your transaction")
-                } else {
-                    console.log("Error submitting transaction")
-                }
-
+              // return the value of the Dai/Eth trade in hex (why hex?)
+            /*const value = ethers.BigNumber.from(
+                trade.inputAmount.raw.toString()
+              ).toHexString();
                 */
-                console.log('All done!!!')
-                const ethBalAfter = await provider.getBalance(acct)
-                .then((bal) => {
-                    console.log("Receiver ETH balance after trade: ", toEther(bal) )
-                }) 
+            
+              const value = trade.inputAmount.raw*10; // // needs to be converted to e.g. hex
+              const valueHex = await ethers.BigNumber.from(value.toString()).toHexString();
+            
+              console.log("trade value: ", value," hex: ",  valueHex );
 
 
-    } catch(e) {
-        console.log("Sell Error: ", e.message);
-    }
+            //ok set up the transaction to handle the actual swap
+            try {
+                const approvalTx = await approve(daiContract, account, valueHex )
+                    .then (async (result) => {
+                        console.log("approve result: ", result );
+                        //let sendTxn = (await account).sendTransaction(result);
+                    });//end approve 
+            } catch(e) {
+                console.log("SellSwap-Swap Approval error: ", e.message )
+            }//end tx try
+
+// Set up and execute actual swap 
+        try {  
+            console.log("amount to transfer: ", amountIn)
+            const routerWithWallet = router.connect(wallet); 
+            const decimals = 18;
+            const transaction = await wallet.sendTransaction({
+                to: acct2,
+                value: amountIn,
+                //value: ethers.utils.parseUnits(toEther(amount), 'ether'),
+                //value: ethers.utils.parseEther("0.01") 
+            })
+            console.log("Transfer hash: ", transaction.hash )
+            
+        } catch (e) {
+            console.log("SellSwap-Swap Transaction error: ", e.message )
+        }
+
+
+    } catch (e) {
+        console.log("Sell Swap Error: ", e.message);
+    }//end try/catch
 
 }//end sellSwap
 
 
-    const approve = async () => {
-        const valueToapprove = ethers.utils.parseUnits('0.01', 'ether')
-        const tx = await WETH.approve(router.address, valueToapprove, {
-    //    gasPrice: provider.getGasPrice(),
-    //    gasLimit: 100000,
-        })
-        console.log('Approving...')
-    //    const receipt = await tx.wait()
-    //    console.log('Approve receipt')
-    //    console.log(receipt)
-    }
+const approve = async (daiContract, account, value ) => {
+    console.log("Sellswap - Approve: ", value );
+
+    let count = await provider.getTransactionCount(account.address, 'latest')
+
+    const routerWithWallet = router.connect(provider); 
+    const decimals = 18;
+                    
+    const approveTx = await daiContract.populateTransaction.approve(router.address, value )
+
+    let sendTxn = (await account).sendTransaction(approveTx);
+    let receipt = (await sendTxn).wait();
+
+    if (receipt) {
+        console.log(" -Approval Transaction is mined - " + '\n' 
+        + "Transaction Hash:", (await sendTxn).hash
+        + '\n' + "Block Number: " 
+        + (await receipt).blockNumber + '\n' 
+        + "Navigate to whereever" 
+        + (await sendTxn).hash, "to see your transaction")
+
+        return true;
+        
+    } else {
+        console.log("Error submitting approval transaction")
+    }//end try/catch
+
+}//end approve
 
 module.exports.sellSwap = sellSwap;

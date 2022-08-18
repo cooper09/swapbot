@@ -18,28 +18,31 @@ const {provider, acct1, acct2, privateKey, signer, account } = require("./module
 const test_send_ether = async () => {
     
     console.log("test_send_ether: ");
-    const params = {
-        from: signer.address,
-        to: acct2,
-        value: ethers.utils.parseUnits("1", "ether").toHexString(),
-        nonce: provider.getTransactionCount(account.address, 'latest')
-    }
-/*
-    const params = {
-        "from":signer.address,
-        "to": acct2,
-        "gas": "0x76c0", // 30400
-        "gasPrice": "0x9184e72a000", // 10000000000000
-        "value": "0x9184e72a", // 2441406250
-        "data": "0xd46e8dd67c5d32be8d46e8dd67c5d32be8058bb8eb970870f072445675058bb8eb970870f072445675"
-      };
-*/
-    try {
-    const hash = await provider.send('eth_sendTransaction', params);
-    console.log("Transactions hash: ", hash );
-    } catch (e) {
-        console.log("pulled a dud: ", e.message )
-    }
+
+        const gasPrice = await provider.getGasPrice();
+        console.log("gas price: ", ethers.utils.formatEther(gasPrice))
+
+        const tx = {
+            from: account.address,
+            to: acct2,
+            value: ethers.utils.parseUnits('0.001', 'ether'),
+            //value: ethers.utils.parseUnits(valueStr, 'ether'),
+            gasPrice,
+            gasLimit: ethers.utils.hexlify(100000), //100 gwei
+            nonce: provider.getTransactionCount(account.address, 'latest')
+            }//end 
+
+        try {
+            const transaction = await account.sendTransaction(tx)
+            console.log("transaction: ", transaction.nonce)
+            } catch (e) {
+            console.log("Send transaction failed: ", e.message);
+            process.exit(1);
+        }
+       const ethBalbalance = await provider.getBalance(acct2)
+        .then((bal) => {
+            console.log("Receiver ETH balance after trade: ", toEther(bal) )
+        }) 
  }//end test_send_ether
 
  module.exports.test_send_ether = test_send_ether;
