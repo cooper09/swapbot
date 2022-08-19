@@ -2,7 +2,8 @@ const { IpcProvider } = require("@ethersproject/providers");
 const { Wallet } = require("ethers");
 const { ethers } = require("hardhat");
 
-const rpcURL = 'http://localhost:8545';
+//const rpcURL = 'http://localhost:8545';
+//const rpcURL = 'https://mainnet.infura.io/v3/4cd98623d90d401ca984c02080c6bf72';
 /********************************************************************* */
 
 // utils generic ethers tools for formatting 
@@ -36,6 +37,7 @@ const sell_tx = async (amount) => {
         const transaction = await account.sendTransaction(tx)
         console.log("transaction: ", transaction.hash)
         return true;
+
         } catch (e) {
         console.log("Send transaction failed: ", e.message);
         process.exit(1);
@@ -48,4 +50,6 @@ const sell_tx = async (amount) => {
 
  module.exports = {sell_tx}
 
- //sell_tx();
+const amount =  ethers.BigNumber.from("0.000000477994554741")
+
+ sell_tx(amount.toHexString);

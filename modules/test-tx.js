@@ -2,7 +2,7 @@ const { IpcProvider } = require("@ethersproject/providers");
 const { Wallet } = require("ethers");
 const { ethers } = require("hardhat");
 
-const rpcURL = 'http://localhost:8545';
+//const rpcURL = 'http://localhost:8545';
 //const provider = new ethers.providers.JsonRpcProvider( rpcURL);
 
 /***********************************************************************************/ 

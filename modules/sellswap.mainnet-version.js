@@ -27,15 +27,12 @@ const sellSwap = async ( wallet, acct, provider ) => {
     //console.log("current gas price: ",  await provider.getTransactionCount(wallet.address, 'latest'))
 
 const chainId = 1;
-try {
-    const dai = await Fetcher.fetchTokenData(chainId, daiAddr );
-} catch (e) {
-    console.log("Fetchin dai data failed: ", e.message )
-}
-//const weth = WETH[chainId];
-//const pair = await Fetcher.fetchPairData(dai,weth);
-//const route = new Route([pair], dai );
-/*
+
+const dai = await Fetcher.fetchTokenData(chainId, daiAddr );
+const weth = WETH[chainId];
+const pair = await Fetcher.fetchPairData(dai,weth);
+const route = new Route([pair], dai );
+
 const daiBal = await daiContract.balanceOf(acct);
 
 console.log("Receiver Dai balance: ", toEther(daiBal) )
@@ -55,6 +52,7 @@ let slippage = toBytes32("0.050");
 //let amountIn = ethers.utils.parseEther(amountEth.toString());
 let amountIn = ethers.utils.parseEther(amountEth.toString());
 
+
 amountIn = amountIn.toString()
 console.log("Amount (WETH) that we should get back: ", amountIn );
 console.log("Amount (DAI) that we should put in: ", amountDai);
@@ -62,12 +60,10 @@ console.log("Amount (WETH) that we should get back: ", amountEth);
 
 const slippageTolerance = new Percent(slippage, "10000"); // 50 bips, or 0.50% - Slippage tolerance
 console.log("Slippage calculated...");
-*/
-/*
+
     try {
         // set up our trade
-        console.log*("Start here...")
-            
+                
         const trade = new Trade( //information necessary to create a swap transaction.
             route,
             new TokenAmount(dai, amountIn),
@@ -90,7 +86,7 @@ console.log("Slippage calculated...");
             /*const value = ethers.BigNumber.from(
                 trade.inputAmount.raw.toString()
               ).toHexString();
-               
+                */
             //cooper s = add multiplier here...
               //const value = trade.inputAmount.raw*10; // // needs to be converted to e.g. hex
               const value = trade.inputAmount.raw; // // needs to be converted to e.g. hex
@@ -109,7 +105,6 @@ console.log("Slippage calculated...");
                 console.log("SellSwap-Swap Approval error: ", e.message )
             }//end tx try
         */
-/*
 // Set up and execute actual swap 
         try {  
             console.log("amount to transfer: ", amountIn)
@@ -125,12 +120,8 @@ console.log("Slippage calculated...");
         } catch (e) {
             console.log("SellSwap-Swap Transaction error: ", e.message )
         }
-*/
-    try {
-        console.log("start here...");
-        const sendTx = require("./sell-tx");
 
-        //sendTx.sell_tx();
+
     } catch (e) {
         console.log("Sell Swap Error: ", e.message);
     }//end try/catch
