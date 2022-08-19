@@ -41,7 +41,7 @@ const { buyAndSell} = require('./modules/buyandsell');
       
                     ++count;
                     console.log("initial seed value: ", result );
-                    const final = await buyAndSell(true);   // true: buy, false: sell 
+                    const final = await buyAndSell(false);   // true: buy, false: sell 
                     console.log("Everything is A-OK: ", count );
                     const finalBal = await provider.getBalance(account.address);
                     console.log("send account ", account.address, " final balance: ", toEther(finalBal));

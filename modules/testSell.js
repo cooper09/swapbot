@@ -47,15 +47,10 @@ const sellSwap = async ( wallet, acct, provider ) => {
     )
 
     const amountDaiIn  = amountEthFromDAI[0];
-    const amountEthAmountOut = amountEthFromDAI[1];
+    const amountEthOut = amountEthFromDAI[1];
 
     console.log("Eth amount for Dai: ", toEther(amountEthFromDAI[0]) );
-    console.log("For ", toEther(amountDaiIn), " Dai receive ", toEther(amountEthAmountOut), " of ETH"  );
-
-    let amountIn = ethers.utils.parseEther(amountDaiIn.toString());
-    console.log("amountIn: ", amountIn , " ie:  ", ethers.utils.formatUnits(amountIn))
-    amountIn = amountIn.toString()
-    console.log("Amount (WETH) that we should get back: ", amountIn );
+    console.log("For ", toEther(amountDaiIn), " Dai receive ", toEther(amountEthOut), " of ETH"  );
 
     let slippage = toBytes32("0.050");
     console.log("slippage: ", slippage )
@@ -65,7 +60,7 @@ const sellSwap = async ( wallet, acct, provider ) => {
         console.log("set up trade to do the swap of dai for tokens");
         const trade = new Trade( //information necessary to create a swap transaction.
             route,
-            new TokenAmount(dai, amountIn),
+            new TokenAmount(dai, amountDaiIn),
             TradeType.EXACT_INPUT
         ); //end trade
 
@@ -83,14 +78,16 @@ const sellSwap = async ( wallet, acct, provider ) => {
 
         // Set up and execute actual swap 
         try {  
-            console.log("amount to transfer: ", amountIn)
+            console.log("amount to transfer: ", amountEthOut );
+            console.log("get jiggy  with it: ", toWei("0.001"))
             const routerWithWallet = router.connect(wallet); 
             const decimals = 18;
 
             const tx = await wallet.sendTransaction({
                 to: acct2,
-                //value: amountIn,
-                value: toWei("0.001"),
+                value: amountEthOut,
+               // value: ethers.utils.parseUnits(valueStr, 'ether'),
+                //value: toWei("0.001"),
             })
             console.log("Transfer hash: ",tx.hash )
         } catch (e) {
