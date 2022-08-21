@@ -4,10 +4,13 @@ const { daiContract } = require('./contracts');
 
 const {buySwap} = require('./buyswap');
 //const {sellSwap} = require('./sellswap');
-const {sellSwap} = require('./testSell'); // test and breakdlown the buy into parts...
+//const {sellSwap} = require('./testSell'); // test and breakdlown the buy into parts...
+const {sellSwap} = require('./testSell-2'); // test and breakdlown the buy into parts...
 
-const buyAndSell = async (buy) => {
-    console.log("The fun of buying and selling: ", buy);
+const { getPrice} = require('./getprice');
+
+const buyAndSell = async (startPrice) => {
+    console.log("BuyAndSell - startPrice: ", startPrice);
     const network =  await provider.detectNetwork()
     console.log("Runnig on network id: ", network.chainId, "", network.name );
 
@@ -23,6 +26,25 @@ const buyAndSell = async (buy) => {
 /********************************************************************** */
 // set up Uniswap variables for pair trading...
 
+const currentPrice = await getPrice();
+console.log("BuyandSell - start price: ",startPrice," current price: ", currentPrice, " currentPrice");
+
+if ((Number(currentPrice)  > Number(startPrice))  && ((Number(currentPrice) <= (Number(currentPrice)+50 )))) {
+    console.log("Sell me, baby!!");
+    await sellSwap(account, acct2, provider);
+}
+
+if (Number(currentPrice) === Number(startPrice) ) {
+    console.log("do nothing...")
+}
+
+if ((Number(currentPrice) < Number(startPrice)) && ((Number(currentPrice) >= (Number(currentPrice)-50 )))){
+    console.log("Buy me, baby!!");
+    await buySwap( account, acct2);
+}
+
+/*
+
 if (buy) {
     console.log("Buy DAI with ETH");
         await buySwap( account, acct2);
@@ -30,6 +52,7 @@ if (buy) {
         console.log("Sell DAI for ETH");
         await sellSwap(account, acct2, provider);
     }
+*/
 
 }//end buyAndSell
 

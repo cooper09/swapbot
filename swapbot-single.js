@@ -26,30 +26,37 @@ const {wethArtifact, daiArtifact,daiContract, router } = require("./modules/cont
 
 //lets get down to business
 const { buyAndSell} = require('./modules/buyandsell');
+const { getPrice} = require('./modules/getprice');
 
     let count = 0;
     const BUY_SELL = true;
 
     const init = async () =>{
-        return Math.random() < 0.5;
+        return await getPrice();
+
+        //return Math.random() < 0.5;
+
     }
 
     init()
-    .then( async (result) => {
-            console.log("current count: ", count);
-            //setInterval ( async () => {
+    .then( async (startPrice) => {
+            console.log("starting price: ", startPrice);
+            setInterval ( async () => {
       
                     ++count;
-                    console.log("initial seed value: ", result );
-                    const final = await buyAndSell(false);   // true: buy, false: sell 
+                    console.log("initial seed value: ", startPrice );
+                    //const final = await buyAndSell(false);   // true: buy, false: sell 
+                    const final = await buyAndSell(startPrice); 
                     console.log("Everything is A-OK: ", count );
                     const finalBal = await provider.getBalance(account.address);
                     console.log("send account ", account.address, " final balance: ", toEther(finalBal));
-    
-          //  }, 3000) //every 3 seconds
-            //}, 60000) //every 5 minuts*/
+  
+            //}, 3000) //every 3 seconds
+         //   }, 60000) //every 5 minuts*/
+        //}, 600000 ) //every 15 minutes
+        }, 1.8e+9 )//every 30 minutes
             //}, 3.6e+6) //every hour (3600000)
-        process.exit(0);
+        //process.exit(0);
     })
     .catch(err => {
         console.log("Init - Error returned: ", err.message );

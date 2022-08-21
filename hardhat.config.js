@@ -27,6 +27,7 @@ module.exports = {
   networks: {
 
     hardhatfork: {
+        chainId: 31337,
         //url: "https://mainnet.infura.io/v3/4cd98623d90d401ca984c02080c6bf72",
         url: "localhost:8545",
       },
