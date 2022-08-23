@@ -51,10 +51,10 @@ const { getPrice} = require('./modules/getprice');
                     const finalBal = await provider.getBalance(account.address);
                     console.log("send account ", account.address, " final balance: ", toEther(finalBal));
   
-            //}, 3000) //every 3 seconds
+            }, 3000) //every 3 seconds
          //   }, 60000) //every 5 minuts*/
         //}, 600000 ) //every 15 minutes
-        }, 1.8e+9 )//every 30 minutes
+        //}, 1.8e+9 )//every 30 minutes
             //}, 3.6e+6) //every hour (3600000)
         //process.exit(0);
     })
