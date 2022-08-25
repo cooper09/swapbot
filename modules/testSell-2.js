@@ -49,18 +49,26 @@ const sellSwap = async ( wallet, acct, provider ) => {
     const amountDaiIn  = amountEthFromDAI[0];
     const amountEthOut = amountEthFromDAI[1];
 
+    //cooper s - should amount DAI in be the balance
+    const contractDaiWallet = daiContract.connect(account);
+    const currentDaiBal = await contractDaiWallet.balanceOf(acct1)
+        .then((bal) => {
+            console.log(account.address, " current Sender DAI balance: ", toEther(bal) )
+        })
+    //
+        //check for transfer EVENT
     console.log("Eth amount for Dai: ", toEther(amountEthFromDAI[0]) );
     console.log("For ", toEther(amountDaiIn), " Dai receive ", toEther(amountEthOut), " of ETH"  );
 
     let slippage = toBytes32("0.050");
-    console.log("slippage: ", slippage )
+    console.log("slippage: ", slippage ) 
     const slippageTolerance = new Percent(slippage, "10000");
 
     try {
         console.log("set up trade to do the swap of dai for tokens");
         const trade = new Trade( //information necessary to create a swap transaction.
             route,
-            new TokenAmount(dai, amountDaiIn),
+            new TokenAmount(dai, (amountDaiIn)),
             TradeType.EXACT_INPUT
         ); //end trade
 
@@ -103,4 +111,4 @@ const sellSwap = async ( wallet, acct, provider ) => {
 
 module.exports.sellSwap = sellSwap;
 
-sellSwap(account, acct2, provider);
+//sellSwap(account, acct2, provider);
