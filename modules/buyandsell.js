@@ -3,9 +3,9 @@ const { toEther } = require('./utils');
 const { daiContract } = require('./contracts');
 
 const {buySwap} = require('./buyswap');
-//const {sellSwap} = require('./sellswap');
+const {sellSwap} = require('./sellswap');
 //const {sellSwap} = require('./testSell'); // test and breakdlown the buy into parts...
-const {sellSwap} = require('./testSell-2'); // test and breakdlown the buy into parts...
+//const {sellSwap} = require('./testSell-2'); // test and breakdlown the buy into parts...
 
 const { getPrice} = require('./getprice');
 

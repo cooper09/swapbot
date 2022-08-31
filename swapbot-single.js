@@ -46,16 +46,19 @@ const { getPrice} = require('./modules/getprice');
                     ++count;
                     console.log("initial seed value: ", startPrice );
                     //const final = await buyAndSell(false);   // true: buy, false: sell 
+                    //tally up final balances
                     const final = await buyAndSell(startPrice); 
                     console.log("Everything is A-OK: ", count );
                     const finalBal = await provider.getBalance(account.address);
                     console.log("send account ", account.address, " final balance: ", toEther(finalBal));
-  
-            }, 3000) //every 3 seconds
-            //}, 60000) //every 5 minuts*/
-        //}, 600000 ) //every 15 minutes
-        //}, 1.8e+9 )//every 30 minutes
-            //}, 3.6e+6) //every hour (3600000)
+                    const rcvrBal = await provider.getBalance(acct2);
+                    console.log("receiver account ", acct2, " final balance: ", toEther(rcvrBal));
+            //}, 3000) //every 3 seconds
+            }, 60000) //every minute/
+            //}, 300000)  //every 5 minutes
+            //}, 900000 ) //every 15 minutes
+            //}, 1800000 )//every 30 minutes
+            //}, 3600000) //every hour (3600000)
         //process.exit(0);
     })
     .catch(err => {

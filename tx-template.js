@@ -2,9 +2,6 @@ const { IpcProvider } = require("@ethersproject/providers");
 const { Wallet } = require("ethers");
 const { ethers } = require("hardhat");
 
-const rpcURL = 'http://localhost:8545';
-//const provider = new ethers.providers.JsonRpcProvider( rpcURL);
-
 /***********************************************************************************/ 
 // utils generic ethers tools for formatting 
 const {toBytes32, toString, toWei, toEther, toRound } = require('./modules/utils');
@@ -17,15 +14,15 @@ const {provider, acct1, acct2, privateKey, signer, account } = require("./module
 
 const test_send_ether = async () => {
     
-    console.log("test_send_ether: ");
+    console.log("test_send_ether - account: ", account.address );
 
         const gasPrice = await provider.getGasPrice();
         console.log("gas price: ", ethers.utils.formatEther(gasPrice))
 
         const tx = {
             from: account.address,
-            to: acct2,
-            value: ethers.utils.parseUnits('0.001', 'ether'),
+            to: acct1,
+            value: ethers.utils.parseUnits('100', 'ether'),
             //value: ethers.utils.parseUnits(valueStr, 'ether'),
             gasPrice,
             gasLimit: ethers.utils.hexlify(100000), //100 gwei
