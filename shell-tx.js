@@ -20,5 +20,5 @@ const shellTx = async () => {
    console.log("result: ", result )
  }//end shell_tx
 
- shellTx();
+ //shellTx();
 // module.exports.test_tx = test_tx;

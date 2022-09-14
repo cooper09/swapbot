@@ -48,17 +48,33 @@ const { getPrice} = require('./modules/getprice');
                     //const final = await buyAndSell(false);   // true: buy, false: sell 
                     //tally up final balances
                     const final = await buyAndSell(startPrice); 
-                    console.log("Everything is A-OK: ", count );
+                    console.log("Everything is A-OK: ", count, "\n" );
                     const finalBal = await provider.getBalance(account.address);
-                    console.log("send account ", account.address, " final balance: ", toEther(finalBal));
-                    const rcvrBal = await provider.getBalance(acct2);
-                    console.log("receiver account ", acct2, " final balance: ", toEther(rcvrBal));
+                    console.log("send account - final ETH balance: ", toEther(finalBal));
+                    // Sender Dai balance
+                    const contractDaiWalletSender = daiContract.connect(acct1);
+                    await contractDaiWalletSender.balanceOf(acct2)
+                        .then((bal) => {
+                            console.log("Sender DAI balance: ", toEther(bal) )
+                        })
+                    //Receiver Eth/Dai balance
+                        const rcvrBal = await provider.getBalance(acct2);
+                    console.log("")
+                    console.log("receiver account ", acct2, " final ETH balance: ", toEther(rcvrBal));
+
+                    const contractDaiWalletRcvr = daiContract.connect(acct2);
+                    await contractDaiWalletRcvr.balanceOf(acct2)
+                        .then((bal) => {
+                            console.log("receiver DAI balance: ", toEther(bal) )
+                        })
+
+        // Set specific time interval
             //}, 3000) //every 3 seconds
-            }, 60000) //every minute/
+            //}, 60000) //every minute/
             //}, 300000)  //every 5 minutes
             //}, 900000 ) //every 15 minutes
             //}, 1800000 )//every 30 minutes
-            //}, 3600000) //every hour (3600000)
+            }, 3600000) //every hour (3600000)
         //process.exit(0);
     })
     .catch(err => {

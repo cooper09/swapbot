@@ -22,12 +22,18 @@ const { daiAddr, wethAddr, wethArtifact, daiArtifact,daiContract, router } = req
 
 const sellSwap = async ( wallet, acct, provider ) => {
 
-    console.log ("TestSell.sellSwap...");
-
+    console.log ("TestSell.sellSwap -  account: ", acct );
+                  
+    const startBal = await provider.getBalance(acct);
+    console.log("send account - start ETH balance: ", toEther(startBal));
+    
     const chainId = 1;
 
     console.log("current block: ",  await provider.getTransactionCount(account.address, 'latest'))
-    console.log("current gas limit: ",  await provider.getBlock(account.address, 'latest').gaslimit )
+    //console.log("current gas limit: ",  await provider.getBlock(account.address, 'latest').gaslimit );
+    
+    //gasPrice * gasLimit = 200000 * 50 * 10^-9 = 0.01.
+    console.log("current gas limit: ",  await provider.getBlock(account.address).gaslimit );
 
     const dai = await Fetcher.fetchTokenData(chainId, daiAddr );
 
@@ -35,7 +41,7 @@ const sellSwap = async ( wallet, acct, provider ) => {
     const pair = await Fetcher.fetchPairData(dai,weth);
     const route = new Route([pair], dai );
 
-    const daiBalSender  = await daiContract.balanceOf(acct1);
+    const daiBalSender  = await daiContract.balanceOf(acct);
     const daiBalRcvr  = await daiContract.balanceOf(acct);
 
     console.log("Dai balance Sender: ", toEther(daiBalSender) , " Dai Balance ReceiverL ", toEther(daiBalRcvr));
@@ -51,7 +57,7 @@ const sellSwap = async ( wallet, acct, provider ) => {
 
     //cooper s - should amount DAI in be the balance
     const contractDaiWallet = daiContract.connect(account);
-    const currentDaiBal = await contractDaiWallet.balanceOf(acct1)
+    const currentDaiBal = await contractDaiWallet.balanceOf(acct)
         .then((bal) => {
             console.log(account.address, " current Sender DAI balance: ", toEther(bal) )
         })
@@ -73,9 +79,13 @@ const sellSwap = async ( wallet, acct, provider ) => {
         ); //end trade
 
         const value = trade.inputAmount.raw; // // needs to be converted to e.g. hex
-        const valueHex = await ethers.BigNumber.from(value.toString()).toHexString();
-      
-        console.log("value: ", value, " valueHex: ", valueHex )
+
+        //cooper s - not sure if this is the value returned from TokenAmount or if it should AmountEthOut
+        //const valueHex = await ethers.BigNumber.from(value.toString()).toHexString();
+        const valueHex = await ethers.BigNumber.from(amountEthOut.toString()).toHexString();
+   
+        console.log("value: ", value, " valueHex: ", valueHex );
+        console.log("value in ether: ", toEther(valueHex) )
 
         const approveTx = require("./approve-tx")
 
@@ -92,10 +102,11 @@ const sellSwap = async ( wallet, acct, provider ) => {
             const decimals = 18;
 
             const tx = await wallet.sendTransaction({
-                to: acct1,
-                value: amountEthOut,
+                to: acct2,
+                //value: amountEthOut/10,
+                //value: valueHex,
                // value: ethers.utils.parseUnits(valueStr, 'ether'),
-                //value: toWei("0.001"),
+                value: toWei("0.007"),
             })
             console.log("Transfer hash: ",tx.hash )
         } catch (e) {

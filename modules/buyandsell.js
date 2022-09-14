@@ -16,7 +16,7 @@ const buyAndSell = async (startPrice) => {
     console.log("acct: ",account.address," start balance: ", toEther(balance));
 
     const contractDaiWallet = daiContract.connect(account);
-    await contractDaiWallet.balanceOf(acct1)
+    await contractDaiWallet.balanceOf(account.address)
         .then((bal) => {
             console.log(account.address, " current DAI balance: ", toEther(bal) )
         })
