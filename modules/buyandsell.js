@@ -27,7 +27,11 @@ const buyAndSell = async (startPrice) => {
 const currentPrice = await getPrice();
 console.log("BuyandSell - start price: ",startPrice," current price: ", currentPrice, " currentPrice");
 
+ let incNumber = Number(startPrice);
+ //console.log("new startprice: ", ++incNumber)
+
 if ((Number(currentPrice)  > Number(startPrice))  && ((Number(currentPrice) <= (Number(currentPrice)+50 )))) {
+//if (( incNumber  > Number(startPrice))  && ((Number(currentPrice) <= (Number(currentPrice)+50 )))) {  //use then force a sell...
     console.log("Sell me, baby!!");
     await sellSwap(account, acct2, provider);
 }

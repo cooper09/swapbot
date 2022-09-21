@@ -22,18 +22,18 @@ const { daiAddr, wethAddr, wethArtifact, daiArtifact,daiContract, router } = req
 
 const sellSwap = async ( wallet, acct, provider ) => {
 
-    console.log ("TestSell.sellSwap -  account: ", acct );
+    console.log ("sellSwap -  account: ", acct )
                   
     const startBal = await provider.getBalance(acct);
-    console.log("send account - start ETH balance: ", toEther(startBal));
+    console.log("sellSwap - send account - start ETH balance: ", toEther(startBal));
     
     const chainId = 1;
 
-    console.log("current block: ",  await provider.getTransactionCount(account.address, 'latest'))
+    console.log("sellSwap - current block: ",  await provider.getTransactionCount(account.address, 'latest'))
     //console.log("current gas limit: ",  await provider.getBlock(account.address, 'latest').gaslimit );
     
     //gasPrice * gasLimit = 200000 * 50 * 10^-9 = 0.01.
-    console.log("current gas limit: ",  await provider.getBlock(account.address).gaslimit );
+    //console.log("current gas limit: ",  await provider.getBlock(account.address).gaslimit );
 
     const dai = await Fetcher.fetchTokenData(chainId, daiAddr );
 
@@ -44,11 +44,12 @@ const sellSwap = async ( wallet, acct, provider ) => {
     const daiBalSender  = await daiContract.balanceOf(acct);
     const daiBalRcvr  = await daiContract.balanceOf(acct);
 
-    console.log("Dai balance Sender: ", toEther(daiBalSender) , " Dai Balance ReceiverL ", toEther(daiBalRcvr));
+    //console.log("sellSwap - Dai balance Sender: ", toEther(daiBalSender) , " Dai Balance ReceiverL ", toEther(daiBalRcvr));
     
     let amountEthFromDAI = await router.getAmountsOut(
         //toWei(route.midPrice.invert().toSignificant(6)),
-        daiBalRcvr,
+        //daiBalRcvr,
+        daiBalSender,
         [daiAddr, wethAddr]
     )
 
@@ -59,19 +60,19 @@ const sellSwap = async ( wallet, acct, provider ) => {
     const contractDaiWallet = daiContract.connect(account);
     const currentDaiBal = await contractDaiWallet.balanceOf(acct)
         .then((bal) => {
-            console.log(account.address, " current Sender DAI balance: ", toEther(bal) )
+            console.log(account.address, "sellSwap -  current Sender DAI balance: ", toEther(bal) )
         })
     //
         //check for transfer EVENT
-    console.log("Eth amount for Dai: ", toEther(amountEthFromDAI[0]) );
-    console.log("For ", toEther(amountDaiIn), " Dai receive ", toEther(amountEthOut), " of ETH"  );
+    console.log("sellSwap - Eth amount for Dai: ", toEther(amountEthFromDAI[0]) );
+    console.log("sellSwap - For ", toEther(amountDaiIn), " Dai receive ", toEther(amountEthOut), " of ETH"  );
 
     let slippage = toBytes32("0.050");
     console.log("slippage: ", slippage ) 
     const slippageTolerance = new Percent(slippage, "10000");
 
     try {
-        console.log("set up trade to do the swap of dai for tokens");
+        console.log("sellSwap - set up trade to do the swap of dai for tokens");
         const trade = new Trade( //information necessary to create a swap transaction.
             route,
             new TokenAmount(dai, (amountDaiIn)),
@@ -84,35 +85,39 @@ const sellSwap = async ( wallet, acct, provider ) => {
         //const valueHex = await ethers.BigNumber.from(value.toString()).toHexString();
         const valueHex = await ethers.BigNumber.from(amountEthOut.toString()).toHexString();
    
-        console.log("value: ", value, " valueHex: ", valueHex );
-        console.log("value in ether: ", toEther(valueHex) )
+        console.log("sellSwap - value: ", value, " valueHex: ", valueHex );
+        console.log("sellSwap - value in ether: ", toEther(valueHex) )
 
         const approveTx = require("./approve-tx")
 
         await approveTx.approve(daiContract, account, valueHex )
             .then (() => {
-                console.log("amount approved...")
+                console.log("sellSwap - amount approved...")
             })
 
         // Set up and execute actual swap 
         try {  
-            console.log("amount to transfer: ", amountEthOut );
-            console.log("get jiggy  with it: ", toWei("100"))
+            console.log("sellSwap - amount to transfer: ", amountEthOut );
+            console.log("sellSwap - get jiggy  with it: ", ethers.utils.formatUnits(amountEthOut))
             const routerWithWallet = router.connect(wallet); 
             const decimals = 18;
 
             const tx = await wallet.sendTransaction({
                 to: acct2,
-                //value: amountEthOut/10,
+                //value: amountEthOut,
                 //value: valueHex,
                // value: ethers.utils.parseUnits(valueStr, 'ether'),
-                value: toWei("0.007"),
+                value: toWei("0.001"), //Fee: $1.58/tx
+                nonce: provider.getTransactionCount(account.address, 'latest')
             })
             console.log("Transfer hash: ",tx.hash )
         } catch (e) {
             console.log("SellSwap-Swap Transaction error: ", e.message )
         }
     
+
+    //remove when testing is finished...
+    //    process.exxit(0);
 
     } catch(e) {
         console.log("Trade failed: ", e.message )

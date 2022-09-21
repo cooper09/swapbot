@@ -11,8 +11,8 @@ const acct1 = "0xb12A2AE1735Cc533837EB73D2747e4804471A0b0"; //Test Account addre
 const acct2 = "0x4986828740bBDBC7CD6Ab10e0753d123f868dc40"; //local Receiver Account 1//
 //
 // this is the privatekey to the signer account, either a seperate account or just one account
-//const privateKey = "af11e0cdb8816e4e036731d9cf0b223a988068d671217244aef3bfe356a2779c"// Test Account 
-const privateKey = "efc31df5cce3adac2038c35dae71a28d8b74c75e3ad4e9a0b1602e7c4672ec18" // Receiver acctount
+const privateKey = "af11e0cdb8816e4e036731d9cf0b223a988068d671217244aef3bfe356a2779c"// Test Account 
+//const privateKey = "efc31df5cce3adac2038c35dae71a28d8b74c75e3ad4e9a0b1602e7c4672ec18" // Receiver acctount
 //const privateKey = "0xac0974bec39a17e36ba4a6b4d238ff944bacb478cbed5efcae784d7bf4f2ff80"; //hardhat account
 const signer = new ethers.Wallet(privateKey); //
 const account = signer.connect(provider);  //The signer is Test Account

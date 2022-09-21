@@ -31,8 +31,8 @@ const getPrice = async () => {
     const weth = WETH[chainId];
     const pair = await Fetcher.fetchPairData(dai,weth);
     const route = new Route([pair], weth );
-    console.log("Buy WETH token with ", route.midPrice.toSignificant(6), " DAI" );
-    console.log("Buy DAI token with ", route.midPrice.invert().toSignificant(6), " WETH" );
+    console.log("getPrice - Buy WETH token with ", route.midPrice.toSignificant(6), " DAI" );
+    console.log("getPrice - Buy DAI token with ", route.midPrice.invert().toSignificant(6), " WETH" );
 
     /*    const trade = new Trade(route, new TokenAmount(weth, '10000000000000000'), TradeType.EXACT_INPUT );
 
@@ -54,7 +54,7 @@ const getPrice = async () => {
        return route.midPrice.toSignificant(6); //ethers.utils.formatUnits(value);
 
     } catch (e) {
-        console.log("Uniswap price failed: ", e.message)// return the amount of WEI to trade
+        console.log("getPrice - Uniswap price failed: ", e.message)// return the amount of WEI to trade
     }
 
 }//end getPrice
