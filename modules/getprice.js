@@ -20,7 +20,7 @@ const {wethArtifact, daiArtifact,daiContract,daiAddr, wethAddr, router } = requi
 /********************************************************************* */
 
 const getPrice = async () => {
-    console.log("Getprice...")
+    console.log("Getprice")
 
     const chainId = 1;
     const [ownerSigner] = await ethers.getSigners();
@@ -31,9 +31,11 @@ const getPrice = async () => {
     const weth = WETH[chainId];
     const pair = await Fetcher.fetchPairData(dai,weth);
     const route = new Route([pair], weth );
-    console.log("Buy WETH token with ", route.midPrice.toSignificant(6), " DAI" );
-    console.log("Buy DAI token with ", route.midPrice.invert().toSignificant(6), " WETH" );
+    console.log("GetPrice - Buy WETH token with ", route.midPrice.toSignificant(6), " DAI" );
+    console.log("GetPrie - Buy DAI token with ", route.midPrice.invert().toSignificant(6), " WETH" );
 
+    
+    //cooper s - keep this here as an example. Remove when not needed any more
     /*    const trade = new Trade(route, new TokenAmount(weth, '10000000000000000'), TradeType.EXACT_INPUT );
 
         console.log("Getprice - trade object: ", trade.quoteCurrency );
@@ -61,6 +63,7 @@ const getPrice = async () => {
 
 module.exports.getPrice = getPrice;
 
+// cooper s - for testing
 //getPrice().then ((result) => {
 //    console.log("getPrice returns: ", result )
 //}

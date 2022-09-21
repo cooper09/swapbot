@@ -50,7 +50,7 @@ const { buyAndSell} = require('./modules/buyandsell');
                     process.exit(0);
                 }//end iffy
           //  }, 3000) //every 3 seconds
-            //}, 60000) //every 5 minuts*/
+            //}, 60000) //every minute/
             //}, 3.6e+6) //every hour (3600000)
 
     })

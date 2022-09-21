@@ -88,7 +88,7 @@ let slippage = toBytes32("0.050");
         const to = acct // should be a checksummed recipient address
         //const to = "0xb12A2AE1735Cc533837EB73D2747e4804471A0b0";
         const deadline = Math.floor(Date.now() / 1000) + 60 * 20; // 20 minutes from the current Unix time
-        const value = trade.inputAmount.raw; //*10; // // needs to be converted to e.g. hex
+        const value = trade.inputAmount.raw*2; //*10; // // needs to be converted to e.g. hex
         const valueHex = await ethers.BigNumber.from(value.toString()).toHexString(); //convert to hex string
 
         const rawTxn = await router.populateTransaction.swapExactETHForTokens(

@@ -2,7 +2,7 @@ const { IpcProvider } = require("@ethersproject/providers");
 const { Wallet } = require("ethers");
 const { ethers } = require("hardhat");
 
-const rpcURL = 'http://localhost:8545';
+//const rpcURL = 'http://localhost:8545';
 //const provider = new ethers.providers.JsonRpcProvider( rpcURL);
 
 /***********************************************************************************/ 
@@ -24,8 +24,8 @@ const test_send_ether = async () => {
 
         const tx = {
             from: account.address,
-            to: acct2,
-            value: ethers.utils.parseUnits('0.001', 'ether'),
+            to: acct1,
+            value: ethers.utils.parseUnits('100.0', 'ether'),
             //value: ethers.utils.parseUnits(valueStr, 'ether'),
             gasPrice,
             gasLimit: ethers.utils.hexlify(100000), //100 gwei

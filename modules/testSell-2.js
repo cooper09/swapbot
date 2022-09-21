@@ -22,7 +22,7 @@ const { daiAddr, wethAddr, wethArtifact, daiArtifact,daiContract, router } = req
 
 const sellSwap = async ( wallet, acct, provider ) => {
 
-    console.log ("TestSell.sellSwap...");
+    console.log ("TestSell 2 - TestSell.sellSwap...");
 
     const chainId = 1;
 
@@ -36,13 +36,16 @@ const sellSwap = async ( wallet, acct, provider ) => {
     const route = new Route([pair], dai );
 
     const daiBalSender  = await daiContract.balanceOf(acct1);
-    const daiBalRcvr  = await daiContract.balanceOf(acct);
+    const daiBalRcvr  = await daiContract.balanceOf(acct2);
 
     console.log("Dai balance Sender: ", toEther(daiBalSender) , " Dai Balance ReceiverL ", toEther(daiBalRcvr));
     
     let amountEthFromDAI = await router.getAmountsOut(
         //toWei(route.midPrice.invert().toSignificant(6)),
-        daiBalSender,
+        // cooper s - this is where we decide to use the Dai balance of the receiver 
+        //  or the Sender to purchase the ETH. 
+        //daiBalSender,
+        daiBalRcvr,
         [daiAddr, wethAddr]
     )
 
@@ -103,4 +106,4 @@ const sellSwap = async ( wallet, acct, provider ) => {
 
 module.exports.sellSwap = sellSwap;
 
-sellSwap(account, acct2, provider);
+//sellSwap(account, acct2, provider);
