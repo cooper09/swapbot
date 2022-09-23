@@ -25,5 +25,5 @@ const sell = async (id) => {
 }
 module.exports.sell = sell;
 
-const result = sell(1);
-console.log("result: ", result );
+//const result = sell(1);
+//console.log("result: ", result );

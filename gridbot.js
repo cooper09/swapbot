@@ -48,11 +48,19 @@ const init = async (start) => {
     
     closedOrderIds = [];
 
- //   const buyResult = await check_buy_orders(currentPrice,buyOrders)
- //   console.log("buy orders result: ", buyResult );
+    const buyResult = await check_buy_orders(currentPrice,buyOrders)
+    console.log("buy orders result: ", buyResult );
 
     const sellResult = await check_sell_orders(sellOrders)
     console.log("sell orders result: ", sellResult );
+
+    if (buyResult) {
+        console.log("gridbot buy settled ")
+    }
+
+    if (sellResult) {
+        console.log("gridbot sell settled ")
+    }
     
    // process.exit(0);
 }//end init
