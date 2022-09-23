@@ -1,7 +1,7 @@
 const {getCurrentPrice} = require('./modules/getCurrentPrice.js');
 const {getPrice} = require('./modules/getPrice.js');
-const {buy} = require('./modules/buy');
-const {sell} = require('./modules/sell');
+const {check_buy_orders} = require('./modules/check_buy_orders.js')
+const {check_sell_orders} = require('./modules/check_sell_orders.js')
 
 let config = require("./config");
 
@@ -10,93 +10,66 @@ let sellOrders=[];
 
 const init = async (start) => {
     console.log("Starting price: ", start );
-    console.log("type: ", typeof(start));
-    console.log("float: ", parseFloat(start) );
+    console.log("type: ", Math.round(start));
 
     // convert price string to floating point for math
-    const startPrice = parseFloat(start);
+    const startPrice = Math.round(start);
 
     for (var i=1; i <= config.NUM_BUY_GRID_LINES; ++i ){
         let price = startPrice - (config.GRID_SIZE*i);
-        console.log("submitting market limit buy order: ", price )
+        //console.log("submitting market limit buy order: ", price )
         // put buy order here
         const buyOrder = {
                             id:i,
-                            order: price,
+                            order: Math.round(price),
                         }
         buyOrders.push(buyOrder)
     }//end for Buy
 
     for (var i=1; i <= config.NUM_SELL_GRID_LINES; ++i ){
         let price = startPrice + (config.GRID_SIZE*i);
-        console.log("submitting market limit sell order: ", price )
+        //console.log("submitting market limit sell order: ", price )
         // put buy order here
         const sellOrder = {
                             id:i,
-                            order: price,
+                            order: Math.round(price),
                         }
         sellOrders.push(sellOrder)
     }//end for Sell
 
-    console.log("Buy orders: ", buyOrders );
-    console.log("Sell orders: ", sellOrders );
+    //console.log("Buy orders: ", buyOrders );
+    //console.log("Sell orders: ", sellOrders );
 
     let currentPrice = await getPrice();
-    console.log("current price: ", currentPrice);
-    console.log("type: ", parseFloat(currentPrice));
+    console.log("current price - raw: ", currentPrice);
+    console.log("rounded ", Math.round(currentPrice));
+
+    currentPrice = Math.round(currentPrice)
     
     closedOrderIds = [];
 
-    for (let buyOrder of buyOrders) {
-        console.log(`checking buy order ${buyOrder['id']}`);
-        console.log("current price: ", currentPrice," buyorder price: ", Math.round(buyOrder['order']));
+ //   const buyResult = await check_buy_orders(currentPrice,buyOrders)
+ //   console.log("buy orders result: ", buyResult );
 
-        let bidPrice = Math.round(buyOrder['order'])
-        let bidId  = buyOrder['id'];
-        console.log("current price: ", typeof(currentPrice), " buyorder price: ", typeof(Math.round(buyOrder['order'])))
-
-        if (currentPrice === bidPrice ) {
-            console.log("time to buy: ", bidPrice );
-            try {
-                let order = await buy(bidId);
-                console.log("Buy Order complete: ", order)
-            } catch (e) {
-                console.log("Buy failed: ", e)
-            }//end try
-        }//end iffy
-    }//end for loop
-
-    //Go through sell orders
-
-    for (let sellOrder of sellOrders) {
-        console.log(`checking sell order ${sellOrder['id']}`);
-        console.log("current price: ", currentPrice," buyorder price: ", Math.round(sellOrder['order']));
-
-        currentPrice = 1286;
-        let sellPrice = Math.round(sellOrder['order'])
-        let sellId  = sellOrder['id'];
-        console.log("current price: ", typeof(currentPrice), " sellorder price: ", typeof(Math.round(sellOrder['order'])))
-
-        if (currentPrice === sellPrice ) {
-            console.log("time to sell: ", sellPrice );
-            try {
-                let order = await sell(sellId);
-                console.log("Sell Order complete: ", order)
-            } catch (e) {
-                console.log("Sell failed: ", e)
-            }//end try
-        }//end iffy
-    }//end for loop
-
-    process.exit(0);
+    const sellResult = await check_sell_orders(sellOrders)
+    console.log("sell orders result: ", sellResult );
+    
+   // process.exit(0);
 }//end init
 
 const start = async () =>{
     return await getPrice();
-    //return Math.random() < 0.5;
 }
 
+let count = 0;
 setInterval ( async () => {
-    console.log("tic");
+    console.log("let us begin...\n");
     init(await start());
-}, 3000)
+//}, 3000) //every 3 seconds
+}, 60000 ) //every minute
+//}, 300000 ) //every 5 minutes
+//}, 900000 ) //every 15 minutes
+//}, 1800000 ) //every 30 minutes
+//}, 3600000 ) //every hour
+
+
