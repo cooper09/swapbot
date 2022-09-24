@@ -1,8 +1,9 @@
 const {ethers} = require('ethers');
 const {getPrice} = require('./getPrice.js');
+const {provider, acct1, acct2, privateKey, signer, account } = require("./accts");
+const {toBytes32, toString, toWei, toEther, toRound } = require('./utils');
 //const {sell} = require('./sell');
-const { provider, account, acct1, acct2 } = require('./accts');
-const {sell} = require('./sell');
+const {sellSwap} = require('./testSell-2');
 
 let orderFullfilled = false;
 
@@ -12,6 +13,9 @@ const check_sell_orders = async (sellOrders) => {
     console.log("check_sell_orders - update price.\n")
     let price = await getPrice();
     price = Math.round(price);
+
+        // cooper s - test price here
+        //price = 1346;
 
     for (let sellOrder of sellOrders) {
     //    console.log(`checking sell order ${sellOrder['id']}`);
@@ -25,11 +29,11 @@ const check_sell_orders = async (sellOrders) => {
             console.log("time to sell: ", sellPrice );
 
             try {
-                let order = await sell(sellId);
-                //let order = await se;llSwap(account, acct2, provider)
+                //let order = await sell(sellId);
+                let order = await sellSwap(sellId, account, acct1, provider)
                 console.log("Sell Order complete: ", order)
                 orderFullfilled = true;
-                process.exit(0)
+                //process.exit(0)
             } catch (e) {
                 console.log("Sell failed: ", e)
             }//end try

@@ -1,0 +1,20 @@
+Grid Test
+Sep 24, 2022
+11:24 am
+
+eth price: 1341
+
+Test (sender) start ETH: 1.01621942 - 0.9701079
+Test (sender) finish ETH: 0.9701079
+cost: $59.53
+
+Rcvr start ETH: 0.76996381
+Rcvr finish ETH: --
+total: 
+
+Rcvr start Dai: 154.90861
+finish DAI: 226.82417 
+total: 71.91556
+
+proft: $12.38
+**************************************

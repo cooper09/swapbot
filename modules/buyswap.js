@@ -12,8 +12,8 @@ const toRound = num => ( ethers.utils.toFixed(2));
 
 /********************************************************************* */
 
-const buySwap = async ( wallet, acct ) => {
-    console.log("buySwap: ", acct);
+const buySwap = async ( orderId,  wallet, acct ) => {
+    console.log("buySwap: ", acct, " orderId: ", orderId );
 
     //const Router = require('./artifacts/contracts/Router.sol/Router.json');
     const wethArtifact = require('../artifacts/contracts/Weth.sol/Weth.json');
@@ -108,7 +108,7 @@ let slippage = toBytes32("0.050");
                 + "Transaction Hash:", (await sendTxn).hash
                 + '\n' + "Block Number: " 
                 + (await reciept).blockNumber + '\n' 
-                + "Navigate to whereever: "  
+                + "Navigate to whereever to see Sell Transaction: "  
                 + (await sendTxn).hash, "to see your transaction")
             } else {
                 console.log("Error submitting transaction")

@@ -1,5 +1,8 @@
 const {ethers} = require('ethers');
+const {provider, acct1, acct2, privateKey, signer, account } = require("./accts");
+const {toBytes32, toString, toWei, toEther, toRound } = require('./utils');
 const {buy} = require('./buy');
+const { buySwap } = require('./buyswap');
 
 let orderFullfilled = false;
 
@@ -10,18 +13,22 @@ const check_buy_orders = async (price, buyOrders) => {
     //    console.log(`checking buy order ${buyOrder['id']}`);
     //    console.log("current price: ", price," buyorder price: ", Math.round(buyOrder['order']));
 
+    // cooper s - test price here
+    //price = 1344;
+
         let bidPrice = Math.round(buyOrder['order'])
         let bidId  = buyOrder['id'];
-        console.log("current price: ", price, " buyorder price: ", typeof(Math.round(buyOrder['order'])))
+        console.log("check_buy_orders - current price: ", price, " buyorder price: ", Math.round(buyOrder['order']))
 
         if (price === bidPrice ) {
-            console.log("time to buy: ", bidPrice );
+            console.log("check_buy_orders - time to buy: ", bidPrice );
 
             try {
-                let order = await buy(bidId);
-                console.log("Buy Order complete: ", order);
+                //let order = await buy(bidId);
+                let order = await buySwap( bidId, account, acct2);
+                console.log("check_buy_orders - Buy Order complete: ", order);
                 orderFullfilled = true;
-               // process.exit(0)
+                //process.exit(0)
             } catch (e) {
                 console.log("Buy failed: ", e)
             }//end try
