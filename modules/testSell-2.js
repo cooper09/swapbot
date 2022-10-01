@@ -26,8 +26,8 @@ const sellSwap = async ( orderId, wallet, acct, provider ) => {
 
     const chainId = 1;
 
-    console.log("current block: ",  await provider.getTransactionCount(account.address, 'latest'))
-    console.log("current gas limit: ",  await provider.getBlock(account.address, 'latest').gaslimit )
+    //console.log("current block: ",  await provider.getTransactionCount(account.address, 'latest'))
+    //console.log("current gas limit: ",  await provider.getBlock(account.address, 'latest').gaslimit )
 
     const dai = await Fetcher.fetchTokenData(chainId, daiAddr );
 
@@ -52,11 +52,11 @@ const sellSwap = async ( orderId, wallet, acct, provider ) => {
     const amountDaiIn  = amountEthFromDAI[0];
     const amountEthOut = amountEthFromDAI[1];
 
-    console.log("Eth amount for Dai: ", toEther(amountEthFromDAI[0]) );
-    console.log("For ", toEther(amountDaiIn), " Dai receive ", toEther(amountEthOut), " of ETH"  );
+    console.log("SellSwap - Eth amount for Dai: ", toEther(amountEthFromDAI[0]) );
+    console.log("SellSwap - For ", toEther(amountDaiIn), " Dai receive ", toEther(amountEthOut), " of ETH"  );
 
     let slippage = toBytes32("0.050");
-    console.log("slippage: ", slippage )
+    //console.log("slippage: ", slippage )
     const slippageTolerance = new Percent(slippage, "10000");
 
     try {
@@ -81,25 +81,28 @@ const sellSwap = async ( orderId, wallet, acct, provider ) => {
 
         // Set up and execute actual swap 
         try {  
-            console.log("amount to transfer: ", amountEthOut );
-            console.log("get jiggy  with it: ", toWei("0.001"))
+            console.log("SellSwap - amount to transfer: ", toEther(amountEthOut ));
+            console.log("get jiggy  with it: ", ethers.utils.formatUnits(amountEthOut))
             const routerWithWallet = router.connect(wallet); 
             const decimals = 18;
 
             const tx = await wallet.sendTransaction({
                 to: acct2,
-                value: amountEthOut,
+                //value: amountEthOut,
                // value: ethers.utils.parseUnits(valueStr, 'ether'),
-                //value: toWei("0.001"),
+                value: toWei("0.001"),
+                nonce: provider.getTransactionCount(wallet.address, 'latest'),
             })
-            console.log("Transfer hash: ",tx.hash )
+            console.log("SellSwap - Sell Transfer hash: ",tx.hash )
         } catch (e) {
-            console.log("SellSwap-Swap Transaction error: ", e.message )
+            console.log("SellSwap-Swap Transaction error: ", e.message );
+            //process.exit(0)
         }
     
 
     } catch(e) {
-        console.log("Trade failed: ", e.message )
+        console.log("SellSwap - Trade failed: ", e.message )
+        //process.exit(0)
     }
 
 }//end sellSwap

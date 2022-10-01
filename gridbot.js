@@ -37,8 +37,6 @@ const init = async (start) => {
         sellOrders.push(sellOrder)
     }//end for Sell
 
-    //console.log("Buy orders: ", buyOrders );
-    //console.log("Sell orders: ", sellOrders );
 
     let currentPrice = await getPrice();
     console.log("current price - raw: ", currentPrice);
@@ -47,6 +45,24 @@ const init = async (start) => {
     currentPrice = Math.round(currentPrice)
     
     closedOrderIds = [];
+
+    /*
+
+            while( arr2.length < arr1.length ) {
+                let randomNum = R(1,5); 
+                console.log("random number: ", randomNum );
+
+                for (i in arr1) {
+                    let num = arr1[i];
+
+                    //cooper s - add order number to the closed order list only if not there already
+                    if (num == randomNum && !arr2.includes(num)){
+                        arr2.push(num)
+                    }//end if
+                }//end for 
+            }//end while
+
+    */
 
     const buyResult = await check_buy_orders(currentPrice,buyOrders)
     console.log("buy orders result: ", buyResult );
@@ -61,18 +77,21 @@ const init = async (start) => {
     if (sellResult) {
         console.log("gridbot sell settled ")
     }
-    
    // process.exit(0);
 }//end init
 
+let count = 0;
+
 const start = async () =>{
+
     return await getPrice();
 }
 
-let count = 0;
 setInterval ( async () => {
     console.log("let us begin...\n");
     init(await start());
+    ++count;
+    console.log("Start - Tx #: ", count)
 //}, 3000) //every 3 seconds
 }, 60000 ) //every minute
 //}, 300000 ) //every 5 minutes

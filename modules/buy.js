@@ -7,7 +7,7 @@ const {toBytes32, toString, toWei, toEther, toRound } = require('./utils');
 const {wethArtifact, daiArtifact,daiContract, daiAddr, wethAddr, router } = require("./contracts");
 /********************************************************************* */
 
-const buy = async (id) => {
+const buy = async (id, orders) => {
     console.log("Buy id: ", id );
 
     const network =  await provider.detectNetwork();
@@ -38,6 +38,9 @@ const buy = async (id) => {
         account
     );
 
+        let closedOrders = [];
+        closedOrders.push(id);
+
     /*********************************************************************** */
     //Set Up a Uniswap trade...
     const chainId = 1;
@@ -46,8 +49,6 @@ const buy = async (id) => {
     const weth = WETH[chainId];
     const pair = await Fetcher.fetchPairData(dai,weth);
     const route = new Route([pair], weth );
-    //console.log("Buy 1 WETH with ", route.midPrice.toSignificant(6)," Dai" );
-    //console.log("Buy 1 DAI with ", route.midPrice.invert().toSignificant(6)," Eth" );
 
     console.log("The ammount of Dai we are selling: ", toWei(route.midPrice.invert().toSignificant(6)) )
     let amountEthFromDAI = await router.getAmountsOut(
@@ -56,15 +57,17 @@ const buy = async (id) => {
         )//end amountFromDai
 
     console.log("The ammount of Dai we are selling: ", toWei(route.midPrice.invert().toSignificant(6)) )
-//console.log("Amount of Eth from Dai - DAI: ", toEther(amountEthFromDAI[0]));
-//console.log("Amount of ETH from DAI - ETH: ", toEther(amountEthFromDAI[1]));
 
 const amount = toEther(amountEthFromDAI[0]);
 let slippage = toBytes32("0.050");
 /************************************************************************* */   
 // Buy Swap goes here...
 
+//cooper s - remove the fullfilled id from the order array
+//orders.
 /************************************************************************* */
     return `resolved buy order ${id}`;
+
+    //returned the new buyOrders array
 }
 module.exports.buy = buy;

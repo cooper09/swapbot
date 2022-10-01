@@ -11,6 +11,7 @@ const toEther = wei => ( ethers.utils.formatEther(wei).toString());
 const toRound = num => ( ethers.utils.toFixed(2));
 
 /********************************************************************* */
+const {provider, acct1, acct2, privateKey, signer, account } = require("./accts");
 
 const buySwap = async ( orderId,  wallet, acct ) => {
     console.log("buySwap: ", acct, " orderId: ", orderId );
@@ -96,7 +97,8 @@ let slippage = toBytes32("0.050");
              path, to,
               deadline,
             {
-                value: valueHex
+                value: valueHex,
+                nonce: provider.getTransactionCount(account.address, 'latest'),
             })
 
             let sendTxn = (await wallet).sendTransaction(rawTxn)
@@ -108,10 +110,11 @@ let slippage = toBytes32("0.050");
                 + "Transaction Hash:", (await sendTxn).hash
                 + '\n' + "Block Number: " 
                 + (await reciept).blockNumber + '\n' 
-                + "Navigate to whereever to see Sell Transaction: "  
-                + (await sendTxn).hash, "to see your transaction")
+                + "Navigate to whereever to see Buy Transaction: "  
+                + (await sendTxn).hash, "to see your Buy transaction")
             } else {
                 console.log("Error submitting transaction")
+                process.exit(0);
             }//end iffy
 
             const contractDaiWallet = daiContract.connect(wallet);
@@ -123,6 +126,7 @@ let slippage = toBytes32("0.050");
   
     } catch(e) {
         console.log("Buy Error: ", e.message);
+        //process.exit(0);
     }
     return true;
 }//end buySwap

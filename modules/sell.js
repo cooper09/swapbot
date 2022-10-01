@@ -7,11 +7,33 @@ const {toBytes32, toString, toWei, toEther, toRound } = require('./utils');
 const {wethArtifact, daiArtifact,daiContract, daiAddr, wethAddr, router } = require("./contracts")
 /********************************************************************* */
 
-const sell = async (id) => {
-    console.log("Sell id: ", id );
+const sell = async (id, orders) => {
+    console.log("Sell id: ", id, " sell order price: ", orders[id].order );
     const network =  await provider.detectNetwork()
     console.log("Sell - network id: ", network.chainId, "", network.name );
-    
+
+    const chainId = 1;
+    const dai = await Fetcher.fetchTokenData(chainId, daiAddr );
+
+    const weth = WETH[chainId];
+    const pair = await Fetcher.fetchPairData(dai,weth);
+    const route = new Route([pair], dai );
+
+    const daiBalSender  = await daiContract.balanceOf(acct1);
+    const daiBalRcvr  = await daiContract.balanceOf(acct2);
+
+    console.log("Dai balance Sender: ", toEther(daiBalSender) , " Dai Balance Receiver: ", toEther(daiBalRcvr));
+    let amountEthFromDAI = await router.getAmountsOut(
+        daiBalRcvr, //daiBalSender ?
+        [daiAddr, wethAddr]
+    )//end amountEthFromDAI
+
+    const amountDaiIn = amountEthFromDAI[0];
+    const amountEthOut = amountEthFromDAI[1];
+
+    console.log("Sell dai for eth: ", toEther(amountEthOut ))
+
+/*    
     const chainId = 1;
     const dai = await Fetcher.fetchTokenData(chainId, daiAddr );
     const weth = WETH[chainId];

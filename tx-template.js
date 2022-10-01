@@ -11,7 +11,7 @@ const {toBytes32, toString, toWei, toEther, toRound } = require('./modules/utils
 
 /***********************************************************************************/ 
 // set up primary and secondary addresses
-const {provider, acct1, acct2, privateKey, signer, account } = require("./modules/accts");
+const {provider, acct1, acct2, testAcct, privateKey, signer, account } = require("./modules/accts");
 
 /***********************************************************************************/ 
 
@@ -24,8 +24,10 @@ const test_send_ether = async () => {
 
         const tx = {
             from: account.address,
-            to: acct1,
-            value: ethers.utils.parseUnits('1.0', 'ether'),
+            //to: acct1, 
+            to: testAcct,
+            //value: ethers.utils.parseUnits('0.07745513411356', 'ether'),
+            value: ethers.utils.parseUnits('0.029', 'ether'),
             //value: ethers.utils.parseUnits(valueStr, 'ether'),
             gasPrice,
             gasLimit: ethers.utils.hexlify(100000), //100 gwei

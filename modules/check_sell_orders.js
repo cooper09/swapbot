@@ -7,15 +7,15 @@ const {sellSwap} = require('./testSell-2');
 
 let orderFullfilled = false;
 
-const check_sell_orders = async (sellOrders) => {
-    console.log("check_sell_orders: ", sellOrders );
+const check_sell_orders = async (sellOrders, id) => {
+    console.log("check_sell_orders: ", sellOrders , " sell Id:");
 
     console.log("check_sell_orders - update price.\n")
     let price = await getPrice();
     price = Math.round(price);
 
         // cooper s - test price here
-        //price = 1346;
+        //price = 1324;
 
     for (let sellOrder of sellOrders) {
     //    console.log(`checking sell order ${sellOrder['id']}`);
@@ -29,10 +29,11 @@ const check_sell_orders = async (sellOrders) => {
             console.log("time to sell: ", sellPrice );
 
             try {
-                //let order = await sell(sellId);
+
                 let order = await sellSwap(sellId, account, acct1, provider)
                 console.log("Sell Order complete: ", order)
                 orderFullfilled = true;
+                return sellId;
                 //process.exit(0)
             } catch (e) {
                 console.log("Sell failed: ", e)
@@ -45,9 +46,6 @@ const check_sell_orders = async (sellOrders) => {
 
 module.exports.check_sell_orders = check_sell_orders
 
-let testOrders = [{
-    id: 00,
-    order: "Test order"
-}]
+
 
 //check_sell_orders(testOrders)

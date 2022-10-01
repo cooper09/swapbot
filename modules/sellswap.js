@@ -156,8 +156,8 @@ const approve = async (daiContract, account, value ) => {
         + "Transaction Hash:", (await sendTxn).hash
         + '\n' + "Block Number: " 
         + (await receipt).blockNumber + '\n' 
-        + "Navigate to whereever" 
-        + (await sendTxn).hash, "to see your transaction")
+        + "Navigate to whereever for Sell transaction" 
+        + (await sendTxn).hash, "to see your Sell transaction")
 
         return true;
         

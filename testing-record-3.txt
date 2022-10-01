@@ -1,0 +1,139 @@
+
+**************************************
+1
+Grid Test - Full gride Buy/Sell
+Sep 30, 2022
+12:30 am
+
+eth price: 
+
+Test (sender) start ETH: 0.66263357 ($855.51)
+Test (sender) finish ETH: 0.00002372
+cost: 855.48
+
+Rcvr start ETH: 1.10596875  ($1427.88)
+Rcvr finish ETH: 1.32996875
+total: 289.20
+
+Rcvr start Dai: 327.68706
+finish DAI: 982.176401129894349007
+
+total: 654.48934113 + 289.20
+
+profit: 943.68934113 - 855.48 = $88.20
+**************************************
+
+**************************************
+1
+Grid Test - Full gride Buy/Sell
+Sep 30, 2022
+12:30 am
+
+eth price: 
+
+Test (sender) start ETH: 0.66263357 ($855.51)
+Test (sender) finish ETH: 0.00002372
+cost: 855.48
+
+Rcvr start ETH: 1.10596875  ($1427.88)
+Rcvr finish ETH: 1.32996875
+total: 289.20
+
+Rcvr start Dai: 327.68706
+finish DAI: 982.176401129894349007
+
+total: 654.48934113 + 289.20
+
+profit: 943.68934113 - 855.48 = $88.20
+**************************************
+
+2
+Grid Test - Full gride Buy/Sell
+Sep 30, 2022
+12:30 am
+
+eth price: 
+
+Test (sender) start ETH: 0.66263357 ($855.51)
+Test (sender) finish ETH: 0.00002372
+cost: 855.48
+
+Rcvr start ETH: 1.10596875  ($1427.88)
+Rcvr finish ETH: 1.32996875
+total: 289.20
+
+Rcvr start Dai: 327.68706
+finish DAI: 982.176401129894349007
+
+total: 654.48934113 + 289.20
+
+profit: 943.68934113 - 855.48 = $88.20
+
+**************************************
+2
+Grid Test - Full grid Buy/Sell  $100
+Sep 30, 2022
+1:35pm
+
+start eth price: 1353
+end eth price: 1346
+
+Test (sender) start ETH: 0.07747886 ($100.03)
+Test (sender) finish ETH: 0.00033059
+cost: $99.60
+
+Rcvr start ETH: 0.00087718 ($1.13)
+Rcvr finish ETH: 0.02987718
+total: $34.27
+
+Rcvr start Dai: 0
+finish DAI: 71.42623
+
+total: 105.69
+
+profit: 105.69 - 99.60 = $6.09
+*************************************
+3
+Grid Test - Full grid Buy/Sell  $100 - Mainnet
+Oct 01, 2022
+8:55am
+
+start eth price: 1323
+end eth price: 1310
+
+Test (sender) start ETH: 0.1027503 ($135.91)
+Test (sender) finish ETH: 0.00312588
+cost: $131.73
+
+Rcvr start ETH: 0.03575496 ($47.28)
+Rcvr finish ETH: 0.05075496 
+total: $19.83
+
+Rcvr start Dai: 188.67362
+finish DAI: 218.58341 
+total: $30
+
+profit: -$50.00 (argh!!)
+*************************************
+4
+Grid Test - Full grid Buy/Sell  Hardhat fork
+Oct 01, 2022
+8:55am - 1pm
+
+start eth price: 1323
+end eth price: 1310
+
+Test (sender) start ETH: 0.1027503 ($135.91)
+Test (sender) finish ETH: 0.00312588
+cost: $131.73
+
+Rcvr start ETH: 0.03575496 ($47.28)
+Rcvr finish ETH: 0.05075496 
+total: $19.83
+
+Rcvr start Dai: 188.67362
+finish DAI: 218.58341 
+total: $30
+
+profit: -$50.00 (argh!!)
+**************************************

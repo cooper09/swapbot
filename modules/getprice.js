@@ -32,7 +32,7 @@ const getPrice = async () => {
     const pair = await Fetcher.fetchPairData(dai,weth);
     const route = new Route([pair], weth );
     console.log("GetPrice - Buy WETH token with ", route.midPrice.toSignificant(6), " DAI" );
-    console.log("GetPrie - Buy DAI token with ", route.midPrice.invert().toSignificant(6), " WETH" );
+    console.log("GetPrice - Buy DAI token with ", route.midPrice.invert().toSignificant(6), " WETH\n" );
 
     
     //cooper s - keep this here as an example. Remove when not needed any more

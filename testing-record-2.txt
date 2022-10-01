@@ -1,3 +1,4 @@
+1
 Grid Test
 Sep 24, 2022
 11:24 am
@@ -17,4 +18,97 @@ finish DAI: 226.82417
 total: 71.91556
 
 proft: $12.38
+**************************************
+2
+Grid Test - Full Eth amount out
+Sep 25, 2022
+8:34 am
+
+eth price: 1327
+
+Test (sender) start ETH: 0.9701079
+Test (sender) finish ETH: 0.83902777 
+cost: $169.43
+
+Rcvr start ETH: 0.76996381
+Rcvr finish ETH: 0.90096875 
+total: 169.14
+
+Rcvr start Dai: 154.90861
+finish DAI: 226.82417 
+
+gas fees: 29 cents
+total: 
+
+profit: - 29 cents
+**************************************
+3
+Grid Test - 0.001 ETH amount out
+Sep 25, 2022
+9:00 am
+
+eth price: 1325
+
+Test (sender) start ETH: 0.83554303 - 0.80365363
+Test (sender) finish ETH: 0.80365363
+cost: $41.17
+
+Rcvr start ETH: 0.90096875 
+Rcvr finish ETH: 0.93096875 - 0.90096875 
+total: $38.73
+
+Rcvr start Dai: 229.42388
+finish DAI:234.63142 -  229.42388
+
+gas fees: 
+total: 38.73 + 5.2 = 43.93 - 38.73
+
+profit: $5.20
+**************************************
+4
+Grid Test - 0.01 ETH amount out $100 base
+Sep 25, 2022
+9:55 am
+
+eth price: 1304
+
+Primary (sender) start ETH: 0.07745513 - 0.00001599
+Primary (sender) finish ETH: 0.00001599
+cost: $99.98
+
+Rcvr start ETH: 0.93096875
+Rcvr finish ETH: 1.00096875 - 0.93096875
+total: $90.37
+
+Rcvr start Dai:234.63142
+finish DAI:
+
+gas fees: 
+total: 
+
+profit: $
+**************************************
+5
+Grid Test - 0.001 ETH amount out $100 base
+Sep 25, 2022
+9:55 am
+
+eth price: 1308
+
+Primary (sender) start ETH: 0.07747513 -  0.04641436
+Primary (sender) finish ETH: 0.04641436
+cost: $40.10
+
+Rcvr start ETH: 1.00096875
+Rcvr finish ETH: 1.02996875 - 1.00096875
+
+total: $0.029
+
+Rcvr start Dai:234.63142
+finish DAI:--
+
+gas fees: 
+total: 
+
+profit: $
 **************************************
