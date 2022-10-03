@@ -15,15 +15,25 @@ const {sell} = require('./modules/sell')
 const { buySwap } = require('./modules/buyswap');
 const { sellSwap } = require('./modules/testSell-2');
 
+//const { check_buys } = require('./modules/returnTrue');
+const { check_sells } = require('./modules/returnTrue');
+const { check_orders } = require('./modules/returnTrue');
+
+const { testPrice } = require('./modules/testPrice');
+
 let config = require("./config");
 
 let buyOrders=[];
 let sellOrders=[];
 let closedOrders=[];
 
+let orders = [];
+let closed = false;
+let orderId = 0;
+
 let count = 0;
 
-const start = async(startPrice) => {
+const start = async (startPrice) => {
     startPrice = Math.round(startPrice);
     console.log("start price: ", startPrice );
 
@@ -38,7 +48,7 @@ const start = async(startPrice) => {
         buyOrders.push(buyOrder)
      }//end for Buy
     }//end if
-    console.log("BuyOrders: ", buyOrders );
+    //console.log("buy order grid: ", buyOrders );
 
     if (sellOrders.length == 0) {
         for (var i=1; i <= config.NUM_SELL_GRID_LINES; ++i ){
@@ -50,7 +60,7 @@ const start = async(startPrice) => {
             sellOrders.push(sellOrder)
         }//end for Sell       
     } 
-    console.log("sell grid: ", sellOrders )  
+    //console.log("sell order grid: ", sellOrders )  
 
         // 1) get latest price
         let currentPrice = Math.round(await getPrice()) ;
@@ -60,6 +70,7 @@ const start = async(startPrice) => {
     //cooper s - for testing purposes only
     //currentPrice = 1329
 
+/*
     while( closedOrders.length < buyOrders.length )  {
 
         console.log("closeOrders length: ",closedOrders.length," buyOrders.length: ", buyOrders.length)
@@ -122,10 +133,75 @@ const start = async(startPrice) => {
         }//end sell iffy
        
  }//end while
+*/
 
- console.log("Final closed orders: ", closedOrders )
+//currentPrice = 1293
+
+while( closedOrders.length < buyOrders.length )  {
+    console.log("start while: ", closedOrders);
+    console.log("current order id: ", orderId);
+
+    // cooper s - testing purposes only
+    //currentPrice = await testPrice(1300, 1296)
+    let latestPrice = Math.round(await getPrice())
+    console.log("latest price: ", latestPrice )
+    let sub = await testPrice(6,1) 
+    console.log("subtract from latest price: ", sub)
+
+    latestPrice = latestPrice + sub;  // "-" for buys, "+" for sells
+
+    /****************************************************************/
+    //cooper s - first check buy orders
+    await check_orders (latestPrice, buyOrders)
+        .then( async res => {
+            console.log("check_buys result: ", res )
+            if (res) {
+                console.log("We have a successfull buy order: ", res);
+                if (!closedOrders.includes(res)) {
+                    console.log("check_buys - close order: ", res )
+                    closedOrders.push(res);
+                    await buy(res)
+                        .then( async (res) => {
+                            console.log("check_buys - buy me baby... ");
+                            console.log("check_buys - now sell me");
+                            await sell(res)
+                                .then(console.log("I'm sold!"))
+                                return true;
+                            })
+                }//end if closeOrders clear
+            }//end iffy
+        })//end buy orders then
+
+/****************************************************************/
+    //cooper s - then check sell orders
+    await check_orders (latestPrice, sellOrders)
+    .then( async res => {
+        console.log("check_sells result: ", res )
+        if (res) {
+            console.log("We have a successfull sell order: ", res);
+            if (!closedOrders.includes(res)) {
+                console.log("check_sells - close order: ", res )
+                closedOrders.push(res);
+                await sell(res)
+                //await sellSwap(res, account, acct2, provider)
+                    .then( async (res) => {
+                        console.log("check_sells - sell me baby... ");
+                        console.log("check_sells - now buy me");
+                        await buy(res)
+                            .then(console.log("I'm bought!"))
+                            return true;
+                        })
+            }//end if closeOrders clear
+        }//end iffy
+    })//end sell orders then
+
+    }//end while
+
+ console.log("TestBot - Final closed orders: ", closedOrders )
  process.exit(0)
 }//end start
+
+/****************************************************** */
 
 const init = async() => {
     return await getPrice();
@@ -135,11 +211,12 @@ setInterval ( async () => {
     console.log("Gridbot 1.0\n");
     start(await init());
     ++count;
-    console.log("Start - finished Tx #: ", count)
+    console.log("Start - finished Tx #: ", count,"\n")
+    //process.exit(0);
 //}, 3000) //every 3 seconds
-//, 60000 ) //every minute
+}, 60000 ) //every minute
 //}, 300000 ) //every 5 minutes
-}, 900000 ) //every 15 minutes
+//}, 900000 ) //every 15 minutes
 //}, 1800000 ) //every 30 minutes
 //}, 3600000 ) //every hour
 

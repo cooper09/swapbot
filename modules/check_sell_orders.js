@@ -37,6 +37,7 @@ const check_sell_orders = async (sellOrders, id) => {
                 //process.exit(0)
             } catch (e) {
                 console.log("Sell failed: ", e)
+                process.exit(0)
             }//end try
         }//end iffy
     }//end for loop

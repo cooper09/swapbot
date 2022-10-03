@@ -28,6 +28,7 @@ const check_buy_orders = async (price,buyOrders, closedOrders) => {
                 return bidId;
             } catch (e) {
                 console.log("Buy failed: ", e)
+                process.exit(0)
             }//end try
         }//end iffy
     }//end for loop

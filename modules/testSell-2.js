@@ -96,13 +96,13 @@ const sellSwap = async ( orderId, wallet, acct, provider ) => {
             console.log("SellSwap - Sell Transfer hash: ",tx.hash )
         } catch (e) {
             console.log("SellSwap-Swap Transaction error: ", e.message );
-            //process.exit(0)
+            process.exit(0)
         }
     
 
     } catch(e) {
         console.log("SellSwap - Trade failed: ", e.message )
-        //process.exit(0)
+        process.exit(0)
     }
 
 }//end sellSwap
