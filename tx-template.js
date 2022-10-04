@@ -24,10 +24,10 @@ const test_send_ether = async () => {
 
         const tx = {
             from: account.address,
-            //to: acct1, 
-            to: testAcct,
+            to: acct1, 
+            //to: testAcct,
             //value: ethers.utils.parseUnits('0.07745513411356', 'ether'),
-            value: ethers.utils.parseUnits('0.029', 'ether'),
+            value: ethers.utils.parseUnits('0.06308923531', 'ether'),
             //value: ethers.utils.parseUnits(valueStr, 'ether'),
             gasPrice,
             gasLimit: ethers.utils.hexlify(100000), //100 gwei

@@ -70,72 +70,6 @@ const start = async (startPrice) => {
     //cooper s - for testing purposes only
     //currentPrice = 1329
 
-/*
-    while( closedOrders.length < buyOrders.length )  {
-
-        console.log("closeOrders length: ",closedOrders.length," buyOrders.length: ", buyOrders.length)
-        
-        // 2) check buy orders-add completed buy/sells to closed list
-        const buyResult = await check_buy_orders(currentPrice, buyOrders, closedOrders)
-        console.log("buy orders result: ", buyResult );
-        
-        const sellResult = await check_sell_orders(sellOrders)
-        console.log("sell orders result: ", sellResult );
-
-        // 3) Wnen the closed liist is full - stop
-
-        if (buyResult !== false) {
-            console.log("add closed buy order to array: ", buyResult )
-            //closedOrders.push(buyResult);
-
-            for (i in buyOrders) {
-                let num = buyOrders[i].id;
-    
-                //cooper s - add order number to the closed order list only if not there already
-                if (num == buyResult && !closedOrders.includes(num)){
-                    console.log("push closed buy order")
-                    closedOrders.push(num);
-                }//end if
-
-
-            }//end for 
-            //cooper s - now that the buy is settled - do the sell side
-                //const sellOrder = await sell(buyResult, sellOrders)
-                let sellOrder = await sellSwap(buyResult, account, acct2, provider)
-                console.log("post buy - sell orders result: ", sellOrder );
-
-            console.log("current closed orders: ", closedOrders )
-
-            //process.exit(0)
-        }//end buy iffy
-
-        if (sellResult !== false) {
-            console.log("add closed order to array: ", sellResult )
-            //closedOrders.push(buyResult);
-
-            for (i in sellOrders) {
-                let num = sellOrders[i].id;
-    
-                //cooper s - add order number to the closed order list only if not there already
-                if (num == sellResult && !closedOrders.includes(num)){
-                    console.log("push closed order")
-                    closedOrders.push(num);
-                }//end if
-            }//end for 
-            console.log("current closed orders: ", closedOrders )
-
-            //cooper s - now that the buy is settled - do the sell side
-            //const buyOrder = await buy(sellResult, buyOrders)
-            let buyOrder = await buySwap( sellResult, account, acct2);
-            console.log("buy orders result: ", buyOrder );
-            //process.exit(0)
-
-        }//end sell iffy
-       
- }//end while
-*/
-
-//currentPrice = 1293
 
 while( closedOrders.length < buyOrders.length )  {
     console.log("start while: ", closedOrders);
@@ -161,10 +95,12 @@ while( closedOrders.length < buyOrders.length )  {
                     console.log("check_buys - close order: ", res )
                     closedOrders.push(res);
                     await buy(res)
+                    //await buySwap( res, account, acct2)
                         .then( async (res) => {
                             console.log("check_buys - buy me baby... ");
                             console.log("check_buys - now sell me");
-                            await sell(res)
+                            //await sell(res)
+                            await sellSwap(res, account, acct2, provider)
                                 .then(console.log("I'm sold!"))
                                 return true;
                             })
@@ -187,7 +123,8 @@ while( closedOrders.length < buyOrders.length )  {
                     .then( async (res) => {
                         console.log("check_sells - sell me baby... ");
                         console.log("check_sells - now buy me");
-                        await buy(res)
+                        //await buy(res)
+                        await buySwap( res, account, acct2)
                             .then(console.log("I'm bought!"))
                             return true;
                         })
