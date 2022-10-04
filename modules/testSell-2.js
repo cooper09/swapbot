@@ -23,6 +23,9 @@ const { daiAddr, wethAddr, wethArtifact, daiArtifact,daiContract, router } = req
 const sellSwap = async ( orderId, wallet, acct, provider ) => {
 
     console.log ("TestSell 2 - TestSell.sellSwap orderId: ", orderId );
+    //console.log ("TestSell 2 - TestSell.sellSwap wallet: ", wallet.address );
+    //console.log ("TestSell 2 - TestSell.sellSwap acct: ", acct );
+    //console.log ("TestSell 2 - TestSell.sellSwap provider: ", provider._isProvider );
 
     const chainId = 1;
 
@@ -38,7 +41,7 @@ const sellSwap = async ( orderId, wallet, acct, provider ) => {
     const daiBalSender  = await daiContract.balanceOf(acct1);
     const daiBalRcvr  = await daiContract.balanceOf(acct2);
 
-    console.log("Dai balance Sender: ", toEther(daiBalSender) , " Dai Balance ReceiverL ", toEther(daiBalRcvr));
+    console.log("Dai balance Sender: ", toEther(daiBalSender) , " Dai Balance Receiver: ", toEther(daiBalRcvr));
     
     let amountEthFromDAI = await router.getAmountsOut(
         //toWei(route.midPrice.invert().toSignificant(6)),
@@ -49,6 +52,7 @@ const sellSwap = async ( orderId, wallet, acct, provider ) => {
         [daiAddr, wethAddr]
     )
 
+    console.log("Got amont of ETH for DAI...")
     const amountDaiIn  = amountEthFromDAI[0];
     const amountEthOut = amountEthFromDAI[1];
 

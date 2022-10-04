@@ -82,6 +82,8 @@ let slippage = toBytes32("0.050");
             TradeType.EXACT_INPUT
         );  //end trade
 
+        console.log("BuySwap - Swap Eth for DAi trade: ", trade );
+
         //Set up SEND transaction
         const amountOutMin = trade.minimumAmountOut(slippageTolerance).raw; // needs to be converted to e.g. hex
         const amountOutMinHex = ethers.BigNumber.from(amountOutMin.toString()).toHexString();
@@ -92,6 +94,8 @@ let slippage = toBytes32("0.050");
         const value = trade.inputAmount.raw*2; //*10; // // needs to be converted to e.g. hex
         const valueHex = await ethers.BigNumber.from(value.toString()).toHexString(); //convert to hex string
 
+       console.log("about to create trade...");
+
         const rawTxn = await router.populateTransaction.swapExactETHForTokens(
             amountOutMinHex,
              path, to,
@@ -100,6 +104,8 @@ let slippage = toBytes32("0.050");
                 value: valueHex,
                 nonce: provider.getTransactionCount(account.address, 'latest'),
             })
+
+            console.log("send trade transaction")
 
             let sendTxn = (await wallet).sendTransaction(rawTxn)
             let reciept = (await sendTxn).wait()
