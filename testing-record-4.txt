@@ -71,20 +71,63 @@ Grid Test - Full grid only - fork
 Oct 04, 2022
 9:00 am
 
-eth price: 1350
+eth price: 1354
+ 
+Test (sender) start ETH: 0.08044789
+Test (sender) finish ETH: 0.06961669
+cost: $14.30
 
-Test (sender) start ETH: 0.08151881
-Test (sender) finish ETH:
-cost: $
-
-Rcvr start ETH: 0.03074536
-Rcvr finish ETH:
-total: $
+Rcvr start ETH: 0.03174536
+Rcvr finish ETH: 0.03574536 -  0.03174536
+total: $5.54
 
 Rcvr start Dai: 40.07724
-finish DAI: 
-total: 
+finish DAI: 50.26200717302907051 - 40.07724
+total: $15.72
 
-profit: $
+profit: $1.42
 **************************************
+5
+Grid Test - Full grid - Mainnet
+Oct 04, 2022
+2:15 pm
+
+eth price: 1349
+ 
+Test (sender) start ETH: 0.07747051 - 0.05829566  (105.05 - 79.05)
+Test (sender) finish ETH: 0.05829566
+cost: $25.31
+
+Rcvr start ETH: 0.06875496
+Rcvr finish ETH: 0.07175496 - 0.06875496
+total: $4.6
+
+Rcvr start Dai: 228.553406207599939963
+finish DAI: 234.535404954226252528 - 228.553406207599939963
+total: $6
+
+profit: $ -14.71
+**************************************
+6
+Grid Test - Full grid - Mainnet
+Oct 04, 2022
+1:15 am
+
+eth price: 1352
+ 
+Test (sender) start ETH: 0.08444125 - 0.05459658 (105.05 - 74.03)
+Test (sender) finish ETH: 0.05459658
+cost: $31.47
+
+Rcvr start ETH: 0.078234
+Rcvr finish ETH: 0.082234 - 0.078234
+total: $5.42
+
+Rcvr start Dai: 250.47539
+finish DAI: 256.45465 - 250.47539 = 6
+total: $11.42
+
+profit: $ -19.60
+**************************************
+
 

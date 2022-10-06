@@ -98,6 +98,9 @@ let slippage = toBytes32("0.050");
        const gasPrice = await ethers.getDefaultProvider().getGasPrice();
        console.log("BuySwap - current gas price: ", toEther(gasPrice));
 
+       let currentNonce = await provider.getTransactionCount(account.address, 'latest')
+       console.log("Buyswap current transaction nonce: ",  currentNonce) 
+
         const rawTxn = await router.populateTransaction.swapExactETHForTokens(
             amountOutMinHex,
              path, 
@@ -107,7 +110,8 @@ let slippage = toBytes32("0.050");
                 //gasPrice,
                 //value: valueHex,
                 value,
-                nonce: provider.getTransactionCount(account.address, 'latest'),
+                //nonce: provider.getTransactionCount(account.address, 'latest'),
+                nonce: currentNonce + 1,
             })
 
             console.log("send trade transaction")
@@ -145,3 +149,5 @@ let slippage = toBytes32("0.050");
 
 module.exports.buySwap = buySwap;
 
+//const buySwap = async ( orderId,  wallet, acct ) => {
+//buySwap(00,account, acct2);

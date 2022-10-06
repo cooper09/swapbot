@@ -98,6 +98,7 @@ const sellSwap = async ( orderId, wallet, acct, provider ) => {
                 nonce: provider.getTransactionCount(wallet.address, 'latest'),
             })
             console.log("SellSwap - Sell Transfer hash: ",tx.hash )
+            //return orderId;
         } catch (e) {
             console.log("SellSwap-Swap Transaction error: ", e.message );
             process.exit(0)
