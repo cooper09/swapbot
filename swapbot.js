@@ -18,7 +18,7 @@ const provider = new ethers.providers.JsonRpcProvider( rpcURL);
 // set up primary and secondary addresses
 const acct1 ="0x2fc8eB0aD0Ba242b5856fbdbF411237342A6756F"; //Primary Account 1 
 const acct2 = "0x4986828740bBDBC7CD6Ab10e0753d123f868dc40"; //local Receiver Account 1
-const privateKey = "a3994cf9f5df831441f98cbe07d1dbd4f2b1ac80518a1de7d66e6f7ef2a03a4a"// Primary Account 1
+const privateKey = ""// Primary Account 1
 ;const signer = new ethers.Wallet(privateKey); //
 const account = signer.connect(provider);  //The signer is Primary Account 1
 
